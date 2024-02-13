@@ -24,10 +24,7 @@ const TemplateSchema = new Schema({
     name: String,
     rarity: String,
     description: String,
-    settingId: {
-        type: String,
-        default: () => uuidv4()
-    },
+    setting: String,
 });
 
 const Template = mongoose.model('template', TemplateSchema);

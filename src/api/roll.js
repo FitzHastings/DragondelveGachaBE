@@ -13,6 +13,17 @@
    limitations under the License.
  */
 
+import Template from '../models/Template.js';
+
 export function getRoll(req, res) {
-    res.json({ message: 'Hello World'});
+    Template.find().then(( templates) => {
+        const mock = templates[0].toObject();
+        mock.id = mock._id;
+        delete mock._id;
+        res.json({
+            name: mock.name,
+            id: 1,
+            template: mock,
+        });
+    });
 }

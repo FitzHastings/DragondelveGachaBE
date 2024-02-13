@@ -25,6 +25,7 @@ export default async function setupAPI () {
     log.info(chalk.cyan('API Server starting up'));
 
     app.use(cors());
+    app.use(express.static('public'));
 
     app.get('/roll', getRoll);
 
