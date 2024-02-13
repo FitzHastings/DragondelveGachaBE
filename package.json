@@ -1,0 +1,24 @@
+{
+  "name": "dragondelvegachabe",
+  "version": "0.1.0",
+  "description": "Gacha game for a TRPG game",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest",
+    "start": "nodemon src/index.js"
+  },
+  "author": "Prokhor Kalinin",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.3"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "express": "^4.18.2",
+    "mongoose": "^8.1.2",
+    "winston": "^3.11.0"
+  }
+}
