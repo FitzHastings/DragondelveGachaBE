@@ -13,18 +13,22 @@
    limitations under the License.
  */
 
-import mongoose from 'mongoose';
+import express from 'express';
 import log from './loggers.js';
+import {getRoll} from './api/roll.js';
 import chalk from 'chalk';
+import cors from 'cors';
 
-export default async function connectToMongoose() {
-    const uri = `mongodb://${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_DB_NAME}`;
+export default async function setupAPI () {
+    const app = express();
+    const port = process.env.PORT;
+    log.info(chalk.cyan('API Server starting up'));
 
-    log.info(chalk.cyan(`Connecting to MongoDB at: ${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}`));
-    await mongoose.connect(uri).then(() => {
-        log.info(chalk.green(`Successfully connected to MongoDB at: ${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}`));
-    }).catch((err) => {
-        log.error(chalk.red('Failed to connect to MongoDB', err));
-        throw err;
+    app.use(cors());
+
+    app.get('/roll', getRoll);
+
+    await app.listen(port, () => {
+        log.info(chalk.green(`API Server is running on ${port}`));
     });
 }

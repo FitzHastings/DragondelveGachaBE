@@ -20,7 +20,7 @@ const chalkMap = new Map();
 chalkMap.set('info', chalk.cyan);
 chalkMap.set('error', chalk.red);
 chalkMap.set('debug', chalk.white);
-chalkMap.set('warn', chalk.yellow)
+chalkMap.set('warn', chalk.yellow);
 
 export default winston.createLogger({
     level: 'info',
