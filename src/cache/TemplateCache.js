@@ -27,22 +27,21 @@ class TemplateCache {
 
     warm() {
         log.info(chalk.green('Warming Template Cache'));
-        Template.find((err, docs) => {
-            if (err) {
-                log.error(chalk.red('Failed to warm cache'));
-            } else {
-                this.templates = new Map(docs.map((template) => [template.id, template]));
-                this.byRarity = new Map();
+        Template.find().then((docs) => {
+            this.templates = new Map(docs.map((template) => [template.id, template]));
+            this.byRarity = new Map();
 
-                for (const rar in rarity)
-                    this.byRarity.add(rar, []);
-
-                for (const doc of docs)
-                    this.byRarity.get(doc.rarity).push(doc);
-
-                this.isWarm = true;
-                log.info(chalk.green(`Template Cache is warm with: ${docs.length} entries`));
+            for (const rar in rarity) {
+                this.byRarity.set(rar, []);
+                console.log('something aded');
             }
+
+            for (const doc of docs)
+                this.byRarity.get(doc.rarity).push(doc);
+            this.isWarm = true;
+            log.info(chalk.green(`Template Cache is warm with: ${docs.length} entries`));
+        }).catch((err) => {
+            log.error(chalk.red('Failed to warm cache'), err);
         });
     }
 

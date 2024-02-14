@@ -13,17 +13,36 @@
    limitations under the License.
  */
 
-import Template from '../models/Template.js';
+import rarity from '../utils/rarity.js';
+import templateCache from '../cache/TemplateCache.js';
+
+function rollForRarity() {
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
+
+    if (randomNumber <= 5)
+        return rarity.legendary;
+    if (randomNumber <= 15)
+        return rarity.epic;
+    if (randomNumber <= 35)
+        return rarity.rare;
+    if (randomNumber <= 65)
+        return rarity.uncommon;
+    return rarity.common;
+}
+
+function rollAgainstCache() {
+    const rarityPool = templateCache.byRarity.get(rollForRarity());
+    const randomIndex = Math.floor(Math.random() * rarityPool.length);
+    return rarityPool[randomIndex];
+}
 
 export function getRoll(req, res) {
-    Template.find().then(( templates) => {
-        const mock = templates[0].toObject();
-        mock.id = mock._id;
-        delete mock._id;
-        res.json({
-            name: mock.name,
-            id: 1,
-            template: mock,
-        });
+    const template = rollAgainstCache().toObject();
+    template.id = template._id;
+    delete template._id;
+    res.json({
+        name: template.name,
+        id: 1,
+        template: template,
     });
 }
