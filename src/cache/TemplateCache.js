@@ -31,15 +31,17 @@ class TemplateCache {
             this.templates = new Map(docs.map((template) => [template.id, template]));
             this.byRarity = new Map();
 
-            for (const rar in rarity) {
+            for (const rar in rarity)
                 this.byRarity.set(rar, []);
-                console.log('something aded');
-            }
 
             for (const doc of docs)
                 this.byRarity.get(doc.rarity).push(doc);
             this.isWarm = true;
-            log.info(chalk.green(`Template Cache is warm with: ${docs.length} entries`));
+            log.info(
+                chalk.green('Template Cache is warm with: ')
+                + chalk.magenta(docs.length)
+                + chalk.green(' entries')
+            );
         }).catch((err) => {
             log.error(chalk.red('Failed to warm cache'), err);
         });

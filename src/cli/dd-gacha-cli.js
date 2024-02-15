@@ -13,7 +13,7 @@
    limitations under the License.
  */
 
-import { program } from 'commander';
+import {program} from 'commander';
 import mongoose from 'mongoose';
 import chalk from 'chalk';
 import dotenv from 'dotenv';

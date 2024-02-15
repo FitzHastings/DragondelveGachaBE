@@ -20,9 +20,20 @@ import chalk from 'chalk';
 export default async function connectToMongoose() {
     const uri = `mongodb://${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_DB_NAME}`;
 
-    log.info(chalk.cyan(`Connecting to MongoDB at: ${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}`));
+    log.info(
+        chalk.cyan('Connecting to MongoDB at: ')
+        + chalk.magenta(process.env.MONGO_DB_HOST)
+        + chalk.cyan(':')
+        + chalk.magenta(process.env.MONGO_DB_PORT)
+    );
+
     await mongoose.connect(uri).then(() => {
-        log.info(chalk.green(`Successfully connected to MongoDB at: ${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}`));
+        log.info(
+            chalk.green('Successfully connected to MongoDB at: ')
+            + chalk.magenta(process.env.MONGO_DB_HOST)
+            + chalk.green(':')
+            + chalk.magenta(process.env.MONGO_DB_PORT)
+        );
     }).catch((err) => {
         log.error(chalk.red('Failed to connect to MongoDB', err));
         throw err;

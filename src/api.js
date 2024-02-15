@@ -19,7 +19,7 @@ import {getRoll} from './api/roll.js';
 import chalk from 'chalk';
 import cors from 'cors';
 
-export default async function setupAPI () {
+export default async function setupAPI() {
     const app = express();
     const port = process.env.PORT;
     log.info(chalk.cyan('API Server starting up'));
@@ -30,6 +30,9 @@ export default async function setupAPI () {
     app.get('/roll', getRoll);
 
     await app.listen(port, () => {
-        log.info(chalk.green(`API Server is running on ${port}`));
+        log.info(
+            chalk.green('API Server is running on ')
+            + chalk.magenta(port)
+        );
     });
 }

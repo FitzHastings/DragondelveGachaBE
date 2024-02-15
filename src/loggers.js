@@ -25,13 +25,13 @@ chalkMap.set('warn', chalk.yellow);
 export default winston.createLogger({
     level: 'info',
     format: winston.format.combine(
-        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
         winston.format.printf(info =>
             `${info.timestamp} ${chalkMap.get(info.level)(info.level)}: ${info.message}`
         )
     ),
     transports: [
         new winston.transports.Console(),
-        new winston.transports.File({ filename: 'last.log' })
+        new winston.transports.File({filename: 'last.log'})
     ],
 });
