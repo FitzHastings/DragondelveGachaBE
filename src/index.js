@@ -18,7 +18,7 @@ import chalk from 'chalk';
 import log from './loggers.js';
 import connectToMongoose from './mongo.js';
 import setupAPI from './api.js';
-import templateCache from './cache/TemplateCache.js';
+import templateCache from './cache/CharacterPool.js';
 import mongoose from 'mongoose';
 
 async function startServer() {

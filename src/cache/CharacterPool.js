@@ -18,7 +18,7 @@ import log from '../loggers.js';
 import chalk from 'chalk';
 import rarity from '../utils/rarity.js';
 
-class TemplateCache {
+class CharacterPool {
     constructor() {
         this.isWarm = false;
         this.templates = null;
@@ -68,4 +68,4 @@ class TemplateCache {
     }
 }
 
-export default new TemplateCache();
+export default new CharacterPool();

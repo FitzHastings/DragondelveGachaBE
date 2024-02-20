@@ -18,6 +18,7 @@ import log from './loggers.js';
 import {getRoll} from './api/roll.js';
 import chalk from 'chalk';
 import cors from 'cors';
+import {createUser} from './api/user.js';
 
 export default async function setupAPI() {
     const app = express();
@@ -28,6 +29,7 @@ export default async function setupAPI() {
     app.use(express.static('public'));
 
     app.get('/roll', getRoll);
+    app.post('/user', createUser);
 
     await app.listen(port, () => {
         log.info(

@@ -14,7 +14,7 @@
  */
 
 import rarity from '../utils/rarity.js';
-import templateCache from '../cache/TemplateCache.js';
+import templateCache from '../cache/CharacterPool.js';
 
 function rollForRarity() {
     const randomNumber = Math.floor(Math.random() * 100) + 1;
@@ -30,14 +30,14 @@ function rollForRarity() {
     return rarity.common;
 }
 
-function rollAgainstCache() {
+function rollAgainstPool() {
     const rarityPool = templateCache.byRarity.get(rollForRarity());
     const randomIndex = Math.floor(Math.random() * rarityPool.length);
     return rarityPool[randomIndex];
 }
 
 export function getRoll(req, res) {
-    const template = rollAgainstCache().toObject();
+    const template = rollAgainstPool().toObject();
     template.id = template._id;
     delete template._id;
     res.json({

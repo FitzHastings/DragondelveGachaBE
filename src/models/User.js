@@ -15,17 +15,32 @@
 
 import mongoose, {Schema} from 'mongoose';
 import {v4 as uuidv4} from 'uuid';
+import bcrypt from 'bcrypt';
 
 const UserSchema = new Schema({
     _id: {
         type: String,
         default: () => uuidv4()
     },
-    identity: String,
-    password: String,
+    identity: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: true
+    },
     currentEnergy: BigInt,
 });
 
-const User = mongoose.model('template', UserSchema);
+UserSchema.pre('save', (next) => {
+    bcrypt.hash(this.password, 10, (error, hash) => {
+        this.password = hash;
+        next();
+    });
+});
+
+const User = mongoose.model('user', UserSchema);
 
 export default User;
