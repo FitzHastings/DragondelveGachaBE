@@ -19,6 +19,14 @@ import log from '../loggers.js';
 import chalk from 'chalk';
 import bcrypt from 'bcrypt';
 
+export function verifyUser(req, res) {
+    const user = req.body.from;
+    if (!user) {
+        res.status(400).send('UserInvalidated!');
+    }
+    res.json(user);
+}
+
 export function createUser(req, res) {
     const identity = req.body?.identity;
     const password = req.body?.password;

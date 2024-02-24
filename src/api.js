@@ -18,7 +18,7 @@ import log from './loggers.js';
 import {getRoll} from './api/roll.js';
 import chalk from 'chalk';
 import cors from 'cors';
-import {createUser, loginUser} from './api/user.js';
+import {createUser, loginUser, verifyUser} from './api/user.js';
 import bodyParser from 'body-parser';
 import expressSession from 'express-session';
 import session from './utils/session.js';
@@ -45,6 +45,7 @@ export default async function setupAPI() {
     app.get('/roll', session, getRoll);
     app.post('/login', loginUser);
     app.post('/user', createUser);
+    app.get('/user', session, verifyUser);
 
     await app.listen(port, () => {
         log.info(

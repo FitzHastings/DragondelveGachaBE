@@ -19,7 +19,7 @@ import log from '../loggers.js';
 export default function (req, res, next) {
     console.log(req.session);
     if (req.session.user) {
-        User.findOne({identity: req.session.user}).then((user) => {
+        User.findById(req.session.user).then((user) => {
             req.body.from = user.toObject();
             next(req, res);
         }).catch((error) => {
