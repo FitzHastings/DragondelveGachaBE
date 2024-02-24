@@ -17,10 +17,12 @@
 import User from '../models/User.js';
 import log from '../loggers.js';
 import chalk from 'chalk';
+import bcrypt from 'bcrypt';
 
 export function createUser(req, res) {
-    const identity = req.body.identity;
-    const password = req.body.password;
+    const identity = req.body?.identity;
+    const password = req.body?.password;
+    console.log(req);
 
     if (!identity || !password) {
         res.status(400);
@@ -44,4 +46,49 @@ export function createUser(req, res) {
         res.status(503);
         res.end('Problems creating a user');
     });
+}
+
+export function loginUser(req, res) {
+    const identity = req.body?.identity;
+    const password = req.body?.password;
+
+    if (!identity || !password) {
+        res.status(400);
+        res.end('Password or identity missing');
+        return;
+    }
+
+    User.findOne({identity})
+        .then((user) => {
+            console.log(req.session.user);
+            if (!user) {
+                res.status(404);
+                res.end('User not found');
+                return;
+            }
+
+            bcrypt.compare(password, user.password, (error, result) => {
+                if (error) {
+                    log.error(chalk.red('Error comparing passwords'), error);
+                    res.status(500);
+                    res.end('Error comparing passwords');
+                    return;
+                }
+
+                if (!result) {
+                    res.status(401);
+                    res.end('Invalid password');
+                    return;
+                }
+                req.session.user = user._id;
+
+                log.info('User logged in: ' + chalk.magenta(user._id));
+                res.send('Login Success!');
+            });
+        })
+        .catch((err) => {
+            log.error(chalk.red('Invalid login'), err);
+            res.status(503);
+            res.end('Invalid login');
+        });
 }

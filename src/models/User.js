@@ -16,6 +16,7 @@
 import mongoose, {Schema} from 'mongoose';
 import {v4 as uuidv4} from 'uuid';
 import bcrypt from 'bcrypt';
+import log from '../loggers.js';
 
 const UserSchema = new Schema({
     _id: {
@@ -31,12 +32,15 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
-    currentEnergy: BigInt,
+    currentEnergy: Number,
 });
 
-UserSchema.pre('save', (next) => {
+UserSchema.pre('save', function (next) {
+    log.info('encrypting password...');
     bcrypt.hash(this.password, 10, (error, hash) => {
         this.password = hash;
+
+        log.info('password hashed to: ' + hash);
         next();
     });
 });

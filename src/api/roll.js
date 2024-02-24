@@ -37,6 +37,8 @@ function rollAgainstPool() {
 }
 
 export function getRoll(req, res) {
+    console.log(req.session);
+    console.log(req.session.userId);
     const template = rollAgainstPool().toObject();
     template.id = template._id;
     delete template._id;

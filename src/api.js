@@ -18,17 +18,32 @@ import log from './loggers.js';
 import {getRoll} from './api/roll.js';
 import chalk from 'chalk';
 import cors from 'cors';
-import {createUser} from './api/user.js';
+import {createUser, loginUser} from './api/user.js';
+import bodyParser from 'body-parser';
+import expressSession from 'express-session';
+import session from './utils/session.js';
 
 export default async function setupAPI() {
     const app = express();
     const port = process.env.PORT;
     log.info(chalk.cyan('API Server starting up'));
 
-    app.use(cors());
+    app.use(cors({credentials: true, origin: true}));
+    app.use(bodyParser.json());
+    app.use(expressSession({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            sameSite: 'none',
+            secure: false,
+            maxAge: 3600000
+        }
+    }));
     app.use(express.static('public'));
 
-    app.get('/roll', getRoll);
+    app.get('/roll', session, getRoll);
+    app.post('/login', loginUser);
     app.post('/user', createUser);
 
     await app.listen(port, () => {
