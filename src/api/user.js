@@ -20,6 +20,7 @@ import chalk from 'chalk';
 import bcrypt from 'bcrypt';
 
 export function verifyUser(req, res) {
+    console.log('verify user bimba', req.body.from);
     const user = req.body.from;
     if (!user) {
         res.status(400).send('UserInvalidated!');

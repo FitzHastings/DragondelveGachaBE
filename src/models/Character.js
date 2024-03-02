@@ -32,6 +32,6 @@ const CharacterSchema = new Schema({
     },
 });
 
-const Character = mongoose.model('template', CharacterSchema);
+const Character = mongoose.model('character', CharacterSchema);
 
 export default Character;

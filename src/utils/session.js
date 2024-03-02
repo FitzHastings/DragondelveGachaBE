@@ -20,8 +20,12 @@ export default function (req, res, next) {
     console.log(req.session);
     if (req.session.user) {
         User.findById(req.session.user).then((user) => {
-            req.body.from = user.toObject();
-            next(req, res);
+            const trueUser = user.toObject();
+            trueUser.id = trueUser._id;
+            delete trueUser._id;
+            delete trueUser.password;
+            req.body.from = trueUser;
+            next();
         }).catch((error) => {
             log.error(error);
             res.status(400).send('Invalid User Set');

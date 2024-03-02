@@ -15,6 +15,10 @@
 
 import rarity from '../utils/rarity.js';
 import templateCache from '../cache/CharacterPool.js';
+import Character from '../models/Character.js';
+import onEnergySpent from '../utils/onEnergySpent.js';
+import log from '../loggers.js';
+import chalk from 'chalk';
 
 function rollForRarity() {
     const randomNumber = Math.floor(Math.random() * 100) + 1;
@@ -37,14 +41,26 @@ function rollAgainstPool() {
 }
 
 export function getRoll(req, res) {
-    console.log(req.session);
-    console.log(req.session.userId);
     const template = rollAgainstPool().toObject();
-    template.id = template._id;
-    delete template._id;
-    res.json({
-        name: template.name,
-        id: 1,
-        template: template,
-    });
+    try {
+        onEnergySpent(req.body.from.id);
+
+        Character.create({
+            name: template.name,
+            templateId: template._id,
+            ownerId: req.body.from.id,
+        }).then((character) => {
+            const rollResult = character.toObject();
+            rollResult.id = rollResult._id;
+            rollResult.template = template;
+            rollResult.template.id = rollResult.template._id;
+            delete rollResult.template._id;
+            delete rollResult._id;
+            res.json(rollResult);
+        });
+    } catch {
+        log.error(chalk.red('Roll Failed'));
+        res.status(500);
+        res.end('Roll failed!');
+    }
 }

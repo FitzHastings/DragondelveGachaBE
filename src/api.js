@@ -22,6 +22,7 @@ import {createUser, loginUser, verifyUser} from './api/user.js';
 import bodyParser from 'body-parser';
 import expressSession from 'express-session';
 import session from './utils/session.js';
+import {getCollection} from './api/collection.js';
 
 export default async function setupAPI() {
     const app = express();
@@ -34,6 +35,7 @@ export default async function setupAPI() {
         secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
+        httpOnly: false,
         cookie: {
             sameSite: 'none',
             secure: false,
@@ -42,6 +44,7 @@ export default async function setupAPI() {
     }));
     app.use(express.static('public'));
 
+    app.get('/collection', session, getCollection);
     app.get('/roll', session, getRoll);
     app.post('/login', loginUser);
     app.post('/user', createUser);
