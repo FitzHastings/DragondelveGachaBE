@@ -69,7 +69,6 @@ export function loginUser(req, res) {
 
     User.findOne({identity})
         .then((user) => {
-            console.log(req.session.user);
             if (!user) {
                 res.status(404);
                 res.end('User not found');

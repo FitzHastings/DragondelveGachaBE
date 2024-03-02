@@ -24,13 +24,15 @@ export function getCollection(req, res) {
         const characterPromises = [];
         for (const character of characters) {
             const responseCharacter = character.toObject();
+            responseCharacter.id = responseCharacter._id;
+            delete responseCharacter._id;
             responseCollection.push(responseCharacter);
-            Template.findById(responseCharacter.templateId).then((template) => {
+            characterPromises.push(Template.findById(responseCharacter.templateId).then((template) => {
                 const responseTemplate = template.toObject();
                 responseTemplate.id = responseTemplate._id;
                 delete responseTemplate._id;
                 responseCharacter.template = responseTemplate;
-            });
+            }));
         }
         Promise.all(characterPromises).then(() => {
             res.json(responseCollection);
