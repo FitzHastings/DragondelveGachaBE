@@ -21,6 +21,7 @@ import Template from '../models/Template.js';
 import rarity from '../utils/rarity.js';
 import * as console from 'console';
 import * as fs from 'fs';
+import * as path from 'path';
 
 async function connectToMongo() {
     const uri = `mongodb://${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_DB_NAME}`;
@@ -36,6 +37,7 @@ async function connectToMongo() {
 }
 
 async function assembleData(directory) {
+    console.log(directory);
     let isValid = true;
     if (!fs.existsSync(`${directory}/info.json`)) {
         console.error(chalk.red('ERROR: info.json not found in directory'));
@@ -102,21 +104,33 @@ program
     .command('crtmp <directory>')
     .description('Creates a new Template from the directory provided')
     .action(async (directory) => {
-        if (!fs.opendirSync(directory)) {
-            console.log(chalk.red(`Error: ${directory} is not a directory`));
-            return;
-        }
 
-        const template = await assembleData(directory);
         await connectToMongo();
-        await Template.create(template).then((template) => {
-            const templateId = template._id;
-            console.log(chalk.green(`Template created with ID: ${templateId}`));
-            copyFiles(directory, templateId);
-        }).catch((err) => {
-            console.error('Failed to create a template!', err);
-        });
-        await mongoose.disconnect();
+        const entities = fs.readdirSync(directory, { withFileTypes: true });
+        console.log(entities);
+        // Filter out directories only
+        const directories = entities.filter((dirent) => dirent.isDirectory());
+        // Call doTemplate on each directory
+        for (const dir of directories) {
+            await doTemplate(path.join(directory, dir.name));
+        }
+        mongoose.disconnect();
     });
-
 program.parse(process.argv);
+
+async function doTemplate(directory)  {
+    console.log(directory);
+    if (!fs.opendirSync(directory)) {
+        console.log(chalk.red(`Error: ${directory} is not a directory`));
+        return;
+    }
+
+    const template = await assembleData(directory);
+    await Template.create(template).then((template) => {
+        const templateId = template._id;
+        console.log(chalk.green(`Template created with ID: ${templateId}`));
+        copyFiles(directory, templateId);
+    }).catch((err) => {
+        console.error('Failed to create a template!', err);
+    });
+}
