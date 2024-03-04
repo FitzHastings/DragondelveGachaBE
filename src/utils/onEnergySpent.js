@@ -22,7 +22,7 @@ export default function (userId, amount = 1) {
         if (user.currentEnergy >= amount) {
             user.currentEnergy -= amount;
             user.save().then(() => {
-                log.info(`Energy count decremented for user ${chalk.magenta(userId)}`);
+                log.info(`${chalk.cyan('Energy count decremented for user')} ${chalk.magenta(userId)}`);
             }).catch(() => {
                 log.error(`${chalk.red('Error while saving user energy count for user')} ${chalk.magenta(userId)}`);
                 throw new Error('Error while saving user energy count');

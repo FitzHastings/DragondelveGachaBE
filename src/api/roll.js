@@ -57,6 +57,12 @@ export function getRoll(req, res) {
             delete rollResult.template._id;
             delete rollResult._id;
             res.json(rollResult);
+            log.info(
+                chalk.green('User ')
+                + chalk.magenta(req.body.from.identity)
+                + chalk.green(' rolled: ')
+                + chalk.magenta(template.name)
+            );
         });
     } catch {
         log.error(chalk.red('Roll Failed'));

@@ -109,7 +109,7 @@ function copyFiles(directory, templateId) {
     console.log(chalk.green('Successfully copied image files for ') + chalk.magenta(templateId));
 }
 
-async function doTemplate(directory)  {
+async function doTemplate(directory) {
     console.log(`creating a template from ${directory}`);
     if (!fs.opendirSync(directory)) {
         console.log(chalk.red(`Error: ${directory} is not a directory`));
@@ -138,7 +138,7 @@ program
     .action(async (directory) => {
 
         await connectToMongo();
-        const entities = fs.readdirSync(directory, { withFileTypes: true });
+        const entities = fs.readdirSync(directory, {withFileTypes: true});
         // Filter out directories only
         const directories = entities.filter((dirent) => dirent.isDirectory());
         // Call doTemplate on each directory
@@ -152,7 +152,7 @@ program
     .command('chech <directory>')
     .description('Checks if i\'s ok to run crtmp on this directory')
     .action(async (directory) => {
-        const entities = fs.readdirSync(directory, { withFileTypes: true });
+        const entities = fs.readdirSync(directory, {withFileTypes: true});
         // Filter out directories only
         const directories = entities.filter((dirent) => dirent.isDirectory());
         // Call checkValidity on each directory

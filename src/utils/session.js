@@ -17,7 +17,6 @@ import User from '../models/User.js';
 import log from '../loggers.js';
 
 export default function (req, res, next) {
-    console.log(req.session);
     if (req.session.user) {
         User.findById(req.session.user).then((user) => {
             const trueUser = user.toObject();

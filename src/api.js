@@ -24,6 +24,7 @@ import expressSession from 'express-session';
 import session from './utils/session.js';
 import {getCollection} from './api/collection.js';
 import * as process from 'process';
+import expressWinston from 'express-winston';
 
 export default async function setupAPI() {
     log.info(chalk.cyan('API Server starting up'));
@@ -62,6 +63,13 @@ export default async function setupAPI() {
     }
 
     app.use(express.static('public'));
+    app.use(expressWinston.logger({
+        winstonInstance: log,
+        meta: true,
+        msg: 'HTTP {{req.method}} {{req.url}} {{req.session.user}}',
+        colorize: true,
+        expressFormat: true,
+    }));
 
     app.get('/collection', session, getCollection);
     app.get('/roll', session, getRoll);

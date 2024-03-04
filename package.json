@@ -1,6 +1,6 @@
 {
   "name": "dragondelvegachabe",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Gacha game for a TRPG game",
   "main": "index.js",
   "type": "module",
@@ -29,6 +29,7 @@
     "dotenv": "^16.4.3",
     "express": "^4.18.2",
     "express-session": "^1.18.0",
+    "express-winston": "^4.2.0",
     "mongoose": "^8.1.2",
     "sharp": "^0.33.2",
     "uuid": "^9.0.1",

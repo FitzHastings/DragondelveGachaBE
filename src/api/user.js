@@ -20,7 +20,6 @@ import chalk from 'chalk';
 import bcrypt from 'bcrypt';
 
 export function verifyUser(req, res) {
-    console.log('verify user bimba', req.body.from);
     const user = req.body.from;
     if (!user) {
         res.status(400).send('UserInvalidated!');
@@ -31,7 +30,6 @@ export function verifyUser(req, res) {
 export function createUser(req, res) {
     const identity = req.body?.identity;
     const password = req.body?.password;
-    console.log(req);
 
     if (!identity || !password) {
         res.status(400);
@@ -90,7 +88,12 @@ export function loginUser(req, res) {
                 }
                 req.session.user = user._id;
 
-                log.info('User logged in: ' + chalk.magenta(user._id));
+                log.info(
+                    chalk.green('User logged in: ')
+                    + chalk.magenta(user._id)
+                    + chalk.green(' as ')
+                    + chalk.magenta(identity)
+                );
                 res.send('Login Success!');
             });
         })
