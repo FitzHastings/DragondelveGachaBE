@@ -22,6 +22,7 @@ import rarity from '../utils/rarity.js';
 import * as console from 'console';
 import * as fs from 'fs';
 import * as path from 'path';
+import sharp from 'sharp';
 
 async function connectToMongo() {
     const uri = `mongodb://${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_DB_NAME}`;
@@ -36,44 +37,38 @@ async function connectToMongo() {
 
 }
 
-async function assembleData(directory) {
-    console.log(directory);
-    let isValid = true;
+function checkValidity(directory) {
+    console.log(`Checking ${directory}`);
     if (!fs.existsSync(`${directory}/info.json`)) {
         console.error(chalk.red('ERROR: info.json not found in directory'));
-        isValid = false;
+        return false;
     }
 
     if (!fs.existsSync(`${directory}/full.png`)) {
         console.error(chalk.red('ERROR: full.png not found in directory'));
-        isValid = false;
+        return false;
     }
-
-    if (!isValid) throw new Error('Invalid Data');
 
     const info = JSON.parse(fs.readFileSync(`${directory}/info.json`).toString('utf8'));
     if (typeof info.name !== 'string') {
         console.error(chalk.red('ERROR: info.name must be a string'));
-        isValid = false;
+        return false;
     }
 
     if (typeof info.description !== 'string') {
         console.error(chalk.red('ERROR: info.description must be a string'));
-        isValid = false;
+        return false;
     }
 
     if (typeof info.rarity !== 'string') {
         console.error(chalk.red('ERROR: info.rarity must be a string'));
-        isValid = false;
+        return false;
     }
 
     if (typeof info.setting !== 'string') {
         console.error(chalk.red('ERROR: info.setting must be a string'));
-        isValid = false;
+        return false;
     }
-
-    if (!isValid)
-        throw new Error('info.json is invalid');
 
     let rarityIsValid = false;
     for (const rar in rarity) {
@@ -83,15 +78,52 @@ async function assembleData(directory) {
         }
     }
 
-    if (!rarityIsValid)
-        throw new Error('Rarity is an invalid value');
+    if (!rarityIsValid) {
+        console.error('Rarity is an invalid value');
+        return false;
+    }
 
-    return info;
+    console.log(chalk.green('OK'));
+    return true;
+}
+
+async function assembleData(directory) {
+    if (!checkValidity(directory)) return;
+
+    return JSON.parse(fs.readFileSync(`${directory}/info.json`).toString('utf8'));
 }
 
 function copyFiles(directory, templateId) {
+    console.log(chalk.cyan('Copying image files for ') + chalk.magenta(templateId));
     fs.mkdirSync(`public/${templateId}`);
     fs.copyFileSync(`${directory}/full.png`, `public/${templateId}/full.png`);
+    sharp(`${directory}/full.png`)
+        .resize(280, 403)
+        .toFile(`public/${templateId}/small.png`, (err) => {
+            if (err) {
+                console.error(chalk.red('Failed to create thumbnail', err));
+            } else {
+                console.log(chalk.green('Image compressed successfully'));
+            }
+        });
+    console.log(chalk.green('Successfully copied image files for ') + chalk.magenta(templateId));
+}
+
+async function doTemplate(directory)  {
+    console.log(`creating a template from ${directory}`);
+    if (!fs.opendirSync(directory)) {
+        console.log(chalk.red(`Error: ${directory} is not a directory`));
+        return;
+    }
+
+    const template = await assembleData(directory);
+    await Template.create(template).then((template) => {
+        const templateId = template._id;
+        console.log(chalk.green(`Template created with ID: ${templateId}`));
+        copyFiles(directory, templateId);
+    }).catch((err) => {
+        console.error('Failed to create a template!', err);
+    });
 }
 
 dotenv.config();
@@ -107,7 +139,6 @@ program
 
         await connectToMongo();
         const entities = fs.readdirSync(directory, { withFileTypes: true });
-        console.log(entities);
         // Filter out directories only
         const directories = entities.filter((dirent) => dirent.isDirectory());
         // Call doTemplate on each directory
@@ -116,21 +147,19 @@ program
         }
         mongoose.disconnect();
     });
-program.parse(process.argv);
 
-async function doTemplate(directory)  {
-    console.log(directory);
-    if (!fs.opendirSync(directory)) {
-        console.log(chalk.red(`Error: ${directory} is not a directory`));
-        return;
-    }
-
-    const template = await assembleData(directory);
-    await Template.create(template).then((template) => {
-        const templateId = template._id;
-        console.log(chalk.green(`Template created with ID: ${templateId}`));
-        copyFiles(directory, templateId);
-    }).catch((err) => {
-        console.error('Failed to create a template!', err);
+program
+    .command('chech <directory>')
+    .description('Checks if i\'s ok to run crtmp on this directory')
+    .action(async (directory) => {
+        const entities = fs.readdirSync(directory, { withFileTypes: true });
+        // Filter out directories only
+        const directories = entities.filter((dirent) => dirent.isDirectory());
+        // Call checkValidity on each directory
+        for (const dir of directories) {
+            checkValidity(path.join(directory, dir.name));
+        }
+        console.log('Finished checking, if no errors popped up you should be ok to do crtp');
     });
-}
+
+program.parse(process.argv);

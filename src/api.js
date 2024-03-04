@@ -23,25 +23,44 @@ import bodyParser from 'body-parser';
 import expressSession from 'express-session';
 import session from './utils/session.js';
 import {getCollection} from './api/collection.js';
+import * as process from 'process';
 
 export default async function setupAPI() {
+    log.info(chalk.cyan('API Server starting up'));
     const app = express();
     const port = process.env.PORT;
-    log.info(chalk.cyan('API Server starting up'));
 
-    app.use(cors({credentials: true, origin: true}));
     app.use(bodyParser.json());
-    app.use(expressSession({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-        httpOnly: false,
-        cookie: {
-            sameSite: 'none',
-            secure: false,
-            maxAge: 3600000
-        }
-    }));
+
+    if (process.env.NODE_ENV === 'production') {
+        app.use(expressSession({
+            secret: process.env.SESSION_SECRET,
+            resave: false,
+            saveUninitialized: false,
+            httpOnly: false,
+            proxy: true,
+            cookie: {
+                secure: true,
+                httpOnly: true,
+                maxAge: 3600000
+            }
+        }));
+    } else {
+        app.use(cors({credentials: true, origin: true}));
+        app.use(expressSession({
+            secret: process.env.SESSION_SECRET,
+            resave: false,
+            saveUninitialized: false,
+            httpOnly: false,
+            cookie: {
+                secure: false,
+                sameSite: 'none',
+                httpOnly: true,
+                maxAge: 3600000
+            }
+        }));
+    }
+
     app.use(express.static('public'));
 
     app.get('/collection', session, getCollection);
