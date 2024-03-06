@@ -60,6 +60,11 @@ function checkValidity(directory) {
         return false;
     }
 
+    if (typeof  info.quote !== 'string') {
+        console.error(chalk.red('ERROR: info.quote must be a string'));
+        return false;
+    }
+
     if (typeof info.rarity !== 'string') {
         console.error(chalk.red('ERROR: info.rarity must be a string'));
         return false;

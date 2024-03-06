@@ -24,6 +24,7 @@ const TemplateSchema = new Schema({
     name: String,
     rarity: String,
     description: String,
+    quote: String,
     setting: String,
 });
 
