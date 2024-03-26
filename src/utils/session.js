@@ -14,7 +14,7 @@
  */
 
 import User from '../models/User.js';
-import log from '../loggers.js';
+import report from '../report.js';
 
 export default function (req, res, next) {
     if (req.session.user) {
@@ -26,7 +26,7 @@ export default function (req, res, next) {
             req.body.from = trueUser;
             next();
         }).catch((error) => {
-            log.error(error);
+            report.error(error);
             res.status(400).send('Invalid User Set');
         });
     } else {

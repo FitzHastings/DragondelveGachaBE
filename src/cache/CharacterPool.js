@@ -14,7 +14,7 @@
  */
 
 import Template from '../models/Template.js';
-import log from '../loggers.js';
+import report from '../report.js';
 import chalk from 'chalk';
 import rarity from '../utils/rarity.js';
 
@@ -26,7 +26,7 @@ class CharacterPool {
     }
 
     warm() {
-        log.info(chalk.green('Warming Template Cache'));
+        report.info(chalk.green('Warming Template Cache'));
         Template.find().then((docs) => {
             this.templates = new Map(docs.map((template) => [template.id, template]));
             this.byRarity = new Map();
@@ -37,13 +37,13 @@ class CharacterPool {
             for (const doc of docs)
                 this.byRarity.get(doc.rarity).push(doc);
             this.isWarm = true;
-            log.info(
+            report.info(
                 chalk.green('Template Cache is warm with: ')
                 + chalk.magenta(docs.length)
                 + chalk.green(' entries')
             );
         }).catch((err) => {
-            log.error(chalk.red('Failed to warm cache'), err);
+            report.error(chalk.red('Failed to warm cache'), err);
         });
     }
 

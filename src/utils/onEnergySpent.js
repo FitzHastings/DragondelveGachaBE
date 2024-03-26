@@ -13,7 +13,7 @@
    limitations under the License.
  */
 
-import log from '../loggers.js';
+import report from '../report.js';
 import chalk from 'chalk';
 import User from '../models/User.js';
 
@@ -22,17 +22,17 @@ export default function (userId, amount = 1) {
         if (user.currentEnergy >= amount) {
             user.currentEnergy -= amount;
             user.save().then(() => {
-                log.info(`${chalk.cyan('Energy count decremented for user')} ${chalk.magenta(userId)}`);
+                report.info(`${chalk.cyan('Energy count decremented for user')} ${chalk.magenta(userId)}`);
             }).catch(() => {
-                log.error(`${chalk.red('Error while saving user energy count for user')} ${chalk.magenta(userId)}`);
+                report.error(`${chalk.red('Error while saving user energy count for user')} ${chalk.magenta(userId)}`);
                 throw new Error('Error while saving user energy count');
             });
         } else {
-            log.warn(`${chalk.yellow('Not enough energy count for user')} ${chalk.magenta(userId)}`);
+            report.warn(`${chalk.yellow('Not enough energy count for user')} ${chalk.magenta(userId)}`);
             throw new Error('Not enough energy count');
         }
     }).catch(() => {
-        log.error(`${chalk.red('User')} ${chalk.magenta(userId)} ${chalk.red('not found on energy count decrement')}`);
+        report.error(`${chalk.red('User')} ${chalk.magenta(userId)} ${chalk.red('not found on energy count decrement')}`);
         throw new Error('User not found on energy decrement');
     });
 }

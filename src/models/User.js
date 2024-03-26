@@ -16,7 +16,7 @@
 import mongoose, {Schema} from 'mongoose';
 import {v4 as uuidv4} from 'uuid';
 import bcrypt from 'bcrypt';
-import log from '../loggers.js';
+import report from '../report.js';
 
 const UserSchema = new Schema({
     _id: {
@@ -42,7 +42,7 @@ UserSchema.pre('save', function (next) {
     bcrypt.hash(this.password, 10, (error, hash) => {
         this.password = hash;
 
-        log.info('password hashed to: ' + hash);
+        report.info('password hashed to: ' + hash);
         next();
     });
 });

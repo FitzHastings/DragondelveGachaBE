@@ -14,13 +14,13 @@
  */
 
 import mongoose from 'mongoose';
-import log from './loggers.js';
+import report from './report.js';
 import chalk from 'chalk';
 
 export default async function connectToMongoose() {
     const uri = `mongodb://${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_DB_NAME}`;
 
-    log.info(
+    report.info(
         chalk.cyan('Connecting to MongoDB at: ')
         + chalk.magenta(process.env.MONGO_DB_HOST)
         + chalk.cyan(':')
@@ -28,14 +28,14 @@ export default async function connectToMongoose() {
     );
 
     await mongoose.connect(uri).then(() => {
-        log.info(
+        report.info(
             chalk.green('Successfully connected to MongoDB at: ')
             + chalk.magenta(process.env.MONGO_DB_HOST)
             + chalk.green(':')
             + chalk.magenta(process.env.MONGO_DB_PORT)
         );
     }).catch((err) => {
-        log.error(chalk.red('Failed to connect to MongoDB', err));
+        report.error(chalk.red('Failed to connect to MongoDB', err));
         throw err;
     });
 }

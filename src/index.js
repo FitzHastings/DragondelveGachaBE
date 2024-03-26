@@ -15,30 +15,30 @@
 
 import dotenv from 'dotenv';
 import chalk from 'chalk';
-import log from './loggers.js';
+import report from './report.js';
 import connectToMongoose from './mongo.js';
 import setupAPI from './api.js';
 import templateCache from './cache/CharacterPool.js';
 import mongoose from 'mongoose';
 
 async function startServer() {
-    log.info(chalk.cyan('Dragondelve Gacha Server is Starting Up'));
+    report.info(chalk.cyan('Dragondelve Gacha Server is Starting Up'));
 
-    log.info(chalk.cyan('Loading env variables'));
+    report.info(chalk.cyan('Loading env variables'));
     if (dotenv.config().error) {
-        log.error(chalk.red('Error loading env variables'));
+        report.error(chalk.red('Error loading env variables'));
         throw new Error('Failed to Load env args');
     }
-    log.info(chalk.green('Successfully loaded env variables'));
+    report.info(chalk.green('Successfully loaded env variables'));
 
     await connectToMongoose();
-    templateCache.warm();
+    await templateCache.warm();
     await setupAPI();
 }
 
 startServer().then(() => {
-    log.info(chalk.green('Dragondelve Gacha Server Startup Complete'));
+    report.info(chalk.green('Dragondelve Gacha Server Startup Complete'));
 }).catch(() => {
-    log.error(chalk.red('Dragondelve Gacha Server Failed Startup'));
+    report.error(chalk.red('Dragondelve Gacha Server Failed Startup'));
     mongoose.disconnect();
 });

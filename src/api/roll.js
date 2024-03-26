@@ -17,7 +17,7 @@ import rarity from '../utils/rarity.js';
 import templateCache from '../cache/CharacterPool.js';
 import Character from '../models/Character.js';
 import onEnergySpent from '../utils/onEnergySpent.js';
-import log from '../loggers.js';
+import report from '../report.js';
 import chalk from 'chalk';
 
 function rollForRarity() {
@@ -57,7 +57,7 @@ export function getRoll(req, res) {
             delete rollResult.template._id;
             delete rollResult._id;
             res.json(rollResult);
-            log.info(
+            report.info(
                 chalk.green('User ')
                 + chalk.magenta(req.body.from.identity)
                 + chalk.green(' rolled: ')
@@ -65,7 +65,7 @@ export function getRoll(req, res) {
             );
         });
     } catch {
-        log.error(chalk.red('Roll Failed'));
+        report.error(chalk.red('Roll Failed'));
         res.status(500);
         res.end('Roll failed!');
     }

@@ -15,7 +15,7 @@
 
 
 import User from '../models/User.js';
-import log from '../loggers.js';
+import report from '../report.js';
 import chalk from 'chalk';
 import bcrypt from 'bcrypt';
 
@@ -42,14 +42,14 @@ export function createUser(req, res) {
         password,
         currentEnergy: 0,
     }).then((user) => {
-        log.info('Created a user with id: ' + chalk.magenta(user._id));
+        report.info('Created a user with id: ' + chalk.magenta(user._id));
         res.json({
             identity: user.identity,
             currentEnergy: user.currentEnergy,
             id: user._id,
         });
     }).catch((err) => {
-        log.error(chalk.red('Problems creating a user'), err);
+        report.error(chalk.red('Problems creating a user'), err);
         res.status(503);
         res.end('Problems creating a user');
     });
@@ -75,7 +75,7 @@ export function loginUser(req, res) {
 
             bcrypt.compare(password, user.password, (error, result) => {
                 if (error) {
-                    log.error(chalk.red('Error comparing passwords'), error);
+                    report.error(chalk.red('Error comparing passwords'), error);
                     res.status(500);
                     res.end('Error comparing passwords');
                     return;
@@ -88,7 +88,7 @@ export function loginUser(req, res) {
                 }
                 req.session.user = user._id;
 
-                log.info(
+                report.info(
                     chalk.green('User logged in: ')
                     + chalk.magenta(user._id)
                     + chalk.green(' as ')
@@ -98,7 +98,7 @@ export function loginUser(req, res) {
             });
         })
         .catch((err) => {
-            log.error(chalk.red('Invalid login'), err);
+            report.error(chalk.red('Invalid login'), err);
             res.status(503);
             res.end('Invalid login');
         });

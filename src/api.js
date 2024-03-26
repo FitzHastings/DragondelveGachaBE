@@ -14,7 +14,7 @@
  */
 
 import express from 'express';
-import log from './loggers.js';
+import report from './report.js';
 import {getRoll} from './api/roll.js';
 import chalk from 'chalk';
 import cors from 'cors';
@@ -27,7 +27,7 @@ import * as process from 'process';
 import expressWinston from 'express-winston';
 
 export default async function setupAPI() {
-    log.info(chalk.cyan('API Server starting up'));
+    report.info(chalk.cyan('API Server starting up'));
     const app = express();
     const port = process.env.PORT;
 
@@ -64,7 +64,7 @@ export default async function setupAPI() {
 
     app.use(express.static('public'));
     app.use(expressWinston.logger({
-        winstonInstance: log,
+        winstonInstance: report,
         meta: true,
         msg: 'HTTP {{req.method}} {{req.url}} {{req.session.user}}',
         colorize: true,
@@ -78,7 +78,7 @@ export default async function setupAPI() {
     app.get('/user', session, verifyUser);
 
     await app.listen(port, () => {
-        log.info(
+        report.info(
             chalk.green('API Server is running on ')
             + chalk.magenta(port)
         );
