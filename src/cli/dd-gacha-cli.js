@@ -23,6 +23,7 @@ import * as console from 'console';
 import * as fs from 'fs';
 import * as path from 'path';
 import sharp from 'sharp';
+import User from '../models/User.js';
 
 async function connectToMongo() {
     const uri = `mongodb://${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_DB_NAME}`;
@@ -165,6 +166,16 @@ program
             checkValidity(path.join(directory, dir.name));
         }
         console.log('Finished checking, if no errors popped up you should be ok to do crtp');
+    });
+
+program
+    .command('gvnrg <id> <amount>')
+    .description('Gives user with this id amount of energy')
+    .action(async (id, amount) => {
+        User.findById(id).then((user) => {
+            user.currentEnergy += amount || 1;
+            user.save().then(() => console.log('success'));
+        });
     });
 
 program.parse(process.argv);
