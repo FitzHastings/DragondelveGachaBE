@@ -29,7 +29,7 @@ async function connectToMongo() {
     const uri = `mongodb://${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_DB_NAME}`;
 
     console.log(chalk.cyan(`Connecting to MongoDB at: ${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}`));
-    mongoose.connect(uri).then(() => {
+    await mongoose.connect(uri).then(() => {
         console.log(chalk.green(`Successfully connected to MongoDB at: ${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}`));
     }).catch((err) => {
         console.error(chalk.red('Failed to connect to MongoDB', err));
@@ -172,10 +172,24 @@ program
     .command('gvnrg <id> <amount>')
     .description('Gives user with this id amount of energy')
     .action(async (id, amount) => {
+        await connectToMongo();
         User.findById(id).then((user) => {
             user.currentEnergy += amount || 1;
             user.save().then(() => console.log('success'));
         });
+        mongoose.disconnect();
+    });
+
+program
+    .command('tmpmp')
+    .description('Gives user with this id amount of energy')
+    .action(async () => {
+        await connectToMongo();
+        await Template.find().then((templates) => {
+            templates.forEach((template) => console.log(`${template.name}=${template._id}`));
+        });
+
+        await mongoose.disconnect();
     });
 
 program.parse(process.argv);
