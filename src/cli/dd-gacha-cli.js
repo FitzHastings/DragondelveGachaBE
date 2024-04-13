@@ -24,6 +24,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import sharp from 'sharp';
 import User from '../models/User.js';
+import Character from '../models/Character.js';
 
 async function connectToMongo() {
     const uri = `mongodb://${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_DB_NAME}`;
@@ -173,11 +174,12 @@ program
     .description('Gives user with this id amount of energy')
     .action(async (id, amount) => {
         await connectToMongo();
-        User.findById(id).then((user) => {
+        User.findById(id).then(async (user) => {
             user.currentEnergy += amount || 1;
-            user.save().then(() => console.log('success'));
+            await user.save().then(() => console.log('success'));
+
+            mongoose.disconnect();
         });
-        mongoose.disconnect();
     });
 
 program
@@ -188,6 +190,18 @@ program
         await Template.find().then((templates) => {
             templates.forEach((template) => console.log(`${template.name}=${template._id}`));
         });
+
+        await mongoose.disconnect();
+    });
+
+program
+    .command('ftrd <characterId> <targetId>')
+    .description('Gives user with this id amount of energy')
+    .action(async (characterId, targetId) => {
+        await connectToMongo();
+        const character = await Character.findById(characterId);
+        character.ownerId = targetId;
+        await character.save;
 
         await mongoose.disconnect();
     });
