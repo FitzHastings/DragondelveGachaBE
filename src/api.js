@@ -76,6 +76,7 @@ export default async function setupAPI() {
     app.post('/login', loginUser);
     app.post('/user', createUser);
     app.get('/user', session, verifyUser);
+    app.post('/harvest',session, verifyUser);
 
     await app.listen(port, () => {
         report.info(

@@ -33,6 +33,7 @@ const UserSchema = new Schema({
         required: true
     },
     currentEnergy: Number,
+    currentStars: Number
 });
 
 UserSchema.pre('save', function (next) {

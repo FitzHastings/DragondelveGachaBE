@@ -41,6 +41,7 @@ export function createUser(req, res) {
         identity,
         password,
         currentEnergy: 0,
+        currentStars: 0,
     }).then((user) => {
         report.info('Created a user with id: ' + chalk.magenta(user._id));
         res.json({
