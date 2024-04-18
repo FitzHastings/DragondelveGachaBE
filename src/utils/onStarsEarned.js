@@ -19,7 +19,11 @@ import User from '../models/User.js';
 
 export default function (userId, amount = 1) {
     User.findById(userId).then((user) => {
-        user.currentStars += amount;
+        if (user.currentStars)
+            user.currentStars += amount;
+        else
+            user.currentStars = amount;
+
         user.save().then(() => {
             report.info(`${chalk.cyan('Star count changed for user')} ${chalk.magenta(userId)}`);
         }).catch(() => {

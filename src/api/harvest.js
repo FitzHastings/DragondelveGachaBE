@@ -27,18 +27,23 @@ rarityMap.set(rarity.legendary, 1000);
 
 export function harvestCharacter(req, res) {
     const user = req.body.from;
-    const characterId = req.body.characterId;
+    const characterId = req.params.characterId;
 
     Character.findById(characterId).then((character) => {
-        if (character.ownerId !== req.body.from) {
-            res.code(400);
+        if (character.ownerId !== user.id) {
+            res.status('400');
             res.end('Unauthorized');
+            return;
         }
 
         Template.findById(character.templateId).then( (template) => {
-            const rarity = template.rarity();
-            character.remove().then(() => {
-                onStarsEarned(user.id, rarityMap.get(rarity));
+            const rarity = template.rarity;
+            console.log(character);
+            Character.deleteOne({ _id: character._id }).then(() => {
+                const starsEarned = rarityMap.get(rarity);
+                onStarsEarned(user.id, starsEarned);
+                res.status('200');
+                res.json({ starsEarned });
             });
         });
     });
