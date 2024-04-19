@@ -34,8 +34,10 @@ class CharacterPool {
             for (const rar in rarity)
                 this.byRarity.set(rar, []);
 
-            for (const doc of docs)
+            for (const doc of docs) {
+                if (doc.fusionCandidate) continue;
                 this.byRarity.get(doc.rarity).push(doc);
+            }
             this.isWarm = true;
             report.info(
                 chalk.green('Template Cache is warm with: ')

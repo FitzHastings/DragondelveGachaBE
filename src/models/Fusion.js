@@ -14,21 +14,13 @@
  */
 
 import mongoose, {Schema} from 'mongoose';
-import {v4 as uuidv4} from 'uuid';
 
-const TemplateSchema = new Schema({
-    _id: {
-        type: String,
-        default: () => uuidv4()
-    },
+const FusionSchema = new Schema({
     name: String,
-    rarity: String,
-    description: String,
-    quote: String,
-    setting: String,
-    fusionCandidate: Boolean,
+    cost: Number,
+    templateIds: [String],
 });
 
-const Template = mongoose.model('template', TemplateSchema);
+const Fusion = mongoose.model('fusion', FusionSchema);
 
-export default Template;
+export default Fusion;
