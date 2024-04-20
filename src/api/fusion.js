@@ -93,8 +93,8 @@ export async function performFusion(req, res) {
 
     onStarsSpent(req.body.from.id, fusion.cost);
 
-    for (const character of characters)
-        Character.deleteOne({ _id: character._id });
+    const deletionPromises = characters.map(character => Character.deleteOne({ _id: character._id }));
+    await Promise.all(deletionPromises);
 
     const character = await Character.create({
         name: template.name,

@@ -177,7 +177,7 @@ program
     .action(async (id, amount) => {
         await connectToMongo();
         User.findById(id).then(async (user) => {
-            user.currentEnergy += amount || 1;
+            user.currentEnergy += parseInt(amount) || 1;
             await user.save().then(() => console.log('success'));
 
             mongoose.disconnect();
