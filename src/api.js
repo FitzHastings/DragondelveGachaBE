@@ -26,6 +26,7 @@ import {getCollection} from './api/collection.js';
 import * as process from 'process';
 import expressWinston from 'express-winston';
 import {harvestCharacter} from './api/harvest.js';
+import {findAllAvailableFusions, performFusion} from './api/fusion.js';
 
 export default async function setupAPI() {
     report.info(chalk.cyan('API Server starting up'));
@@ -78,6 +79,8 @@ export default async function setupAPI() {
     app.post('/user', createUser);
     app.get('/user', session, verifyUser);
     app.post('/harvest/:characterId',session, harvestCharacter);
+    app.get('/fusion/', session, findAllAvailableFusions);
+    app.get('/fusion/fuse/:fusionId', session, performFusion);
 
     await app.listen(port, () => {
         report.info(

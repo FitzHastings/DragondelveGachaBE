@@ -19,6 +19,7 @@ const FusionSchema = new Schema({
     name: String,
     cost: Number,
     templateIds: [String],
+    resultTemplateId: String
 });
 
 const Fusion = mongoose.model('fusion', FusionSchema);
