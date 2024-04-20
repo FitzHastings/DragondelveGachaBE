@@ -91,8 +91,12 @@ export async function performFusion(req, res) {
         }
     }
 
-    onStarsSpent(req.body.from.id, fusion.cost);
-
+    try {
+        onStarsSpent(req.body.from.id, fusion.cost);
+    } catch (error) {
+        res.code(400).send('Bad Request');
+        return
+    }
     const deletionPromises = characters.map(character => Character.deleteOne({ _id: character._id }));
     await Promise.all(deletionPromises);
 
@@ -104,7 +108,7 @@ export async function performFusion(req, res) {
 
     const fusionResult = character.toObject();
     fusionResult.id = fusionResult._id;
-    fusionResult.template = template;
+    fusionResult.template = template.toObject();
     fusionResult.template.id = fusionResult.template._id;
     delete fusionResult.template._id;
     delete fusionResult._id;
