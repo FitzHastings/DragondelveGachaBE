@@ -25,6 +25,8 @@ import * as path from 'path';
 import sharp from 'sharp';
 import User from '../models/User.js';
 import Character from '../models/Character.js';
+import Fusion from '../models/Fusion.js';
+import fusion from '../models/Fusion.js';
 
 async function connectToMongo() {
     const uri = `mongodb://${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_DB_NAME}`;
@@ -184,7 +186,7 @@ program
 
 program
     .command('tmpmp')
-    .description('Gives user with this id amount of energy')
+    .description('Creates a map of templates')
     .action(async () => {
         await connectToMongo();
         await Template.find().then((templates) => {
@@ -202,6 +204,52 @@ program
         const character = await Character.findById(characterId);
         character.ownerId = targetId;
         await character.save;
+
+        await mongoose.disconnect();
+    });
+
+program
+    .command('crfsn <fusionfile>')
+    .description('Converts a template to a fusion template and creates a fusion document')
+    .action(async (fusionfile) => {
+        await connectToMongo();
+
+        const fusionData = JSON.parse(fs.readFileSync(fusionfile).toString('utf8'));
+
+        if (typeof fusionData.name !== 'string') {
+            console.error(chalk.red('ERROR: fusionData.name must be a string'));
+            return false;
+        }
+
+        if (typeof fusionData.description !== 'string') {
+            console.error(chalk.red('ERROR: fusionData.description must be a number'));
+            return false;
+        }
+
+        if (typeof  fusionData.cost !== 'number') {
+            console.error(chalk.red('ERROR: fusionData.cost must be a string'));
+            return false;
+        }
+
+        if (typeof  fusionData.resultTemplateId !== 'string') {
+            console.error(chalk.red('ERROR: fusionData.cost must be a string'));
+            return false;
+        }
+
+        if (typeof fusionData.templateIds !== 'object') {
+            console.error(chalk.red('ERROR: info.setting must be an object (array)'));
+            return false;
+        }
+
+        const template = await Template.findById(fusionData.resultTemplateId);
+        template.fusionCandidate = true;
+        template.save();
+
+        await Fusion.create(fusionData).then((fusion) => {
+            console.log(chalk.green(`Fusion created with ID: ${fusion._id}`));
+        }).catch((err) => {
+            console.error('Failed to create a fusion!', err);
+        });
 
         await mongoose.disconnect();
     });

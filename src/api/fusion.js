@@ -35,9 +35,10 @@ export async function findAllAvailableFusions(req, res) {
             templates: [],
         };
 
-        for (const template of fusion.templateIds) {
+        for (const templateId of fusion.templateIds) {
             templatePromises.push(
-                Character.findOne({ ownerId: user.id, templateId: template._id }).then((character) => {
+                Character.findOne({ ownerId: user.id, templateId: templateId }).then(async (character) => {
+                    const template = await Template.findById(templateId);
                     if (character) {
                         showFusion = true;
                         formattedFusion.templates.push({
@@ -48,7 +49,7 @@ export async function findAllAvailableFusions(req, res) {
                         });
                     } else {
                         formattedFusion.templates.push({
-                            id: 'unkown-template',
+                            id: 'unknown-template',
                             rarity: template.rarity,
                             setting: template.setting,
                         });
@@ -63,6 +64,7 @@ export async function findAllAvailableFusions(req, res) {
         formattedResponse.push(formattedFusion);
     }
 
+    res.status(200);
     res.json(formattedResponse);
 }
 
@@ -71,10 +73,10 @@ export async function performFusion(req, res) {
     const fusionId = req.params.fusionId;
 
     const fusion = await Fusion.findById(fusionId);
-    const characters = [];
+    const characterPromises = [];
     for (const templateId of fusion.templateIds)
-        characters.push(Character.findOne({ ownerId: user.id, templateId }));
-    await Promise.all(characters);
+        characterPromises.push(Character.findOne({ ownerId: user.id, templateId }));
+    const characters = await Promise.all(characterPromises);
 
     const template = await Template.findById(fusion.resultTemplateId);
 
@@ -106,6 +108,7 @@ export async function performFusion(req, res) {
     fusionResult.template.id = fusionResult.template._id;
     delete fusionResult.template._id;
     delete fusionResult._id;
+    res.status(200);
     res.json(fusionResult);
 
     report.info(

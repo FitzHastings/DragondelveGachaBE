@@ -18,6 +18,7 @@ import mongoose, {Schema} from 'mongoose';
 const FusionSchema = new Schema({
     name: String,
     cost: Number,
+    description: String,
     templateIds: [String],
     resultTemplateId: String
 });

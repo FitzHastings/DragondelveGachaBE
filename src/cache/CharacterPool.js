@@ -40,9 +40,17 @@ class CharacterPool {
             }
             this.isWarm = true;
             report.info(
-                chalk.green('Template Cache is warm with: ')
+                chalk.green('There were : ')
                 + chalk.magenta(docs.length)
-                + chalk.green(' entries')
+                + chalk.green(' templates detected')
+            );
+
+            let cacheSize = 0;
+            this.byRarity.forEach((val) => cacheSize += val.length);
+            report.info(
+                chalk.green('Template cache is warm with: ')
+                + chalk.magenta(cacheSize)
+                + chalk.green(' entries.')
             );
         }).catch((err) => {
             report.error(chalk.red('Failed to warm cache'), err);
