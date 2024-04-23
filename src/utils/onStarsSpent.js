@@ -17,23 +17,20 @@ import report from '../report.js';
 import chalk from 'chalk';
 import User from '../models/User.js';
 
-export default function (userId, amount = 1) {
-    User.findById(userId).then((user) => {
-        if (user.currentStars >= amount)
+export default async function (userId, amount = 1) {
+    try {
+        const user = User.findById(userId)
+        if (user.currentStars >= amount) {
             user.currentStars -= amount;
-        else {
+        } else {
             report.warn(`${chalk.yellow('Not enough star count for user')} ${chalk.magenta(userId)}`);
             throw new Error('Not enough star count');
         }
 
-        user.save().then(() => {
-            report.info(`${chalk.cyan('Star count changed for user')} ${chalk.magenta(userId)}`);
-        }).catch(() => {
-            report.error(`${chalk.red('Error while saving user star count count for user')} ${chalk.magenta(userId)}`);
-            throw new Error('Error while saving user star count');
-        });
-    }).catch(() => {
+        await user.save()
+        report.info(`${chalk.cyan('Star count changed for user')} ${chalk.magenta(userId)}`);
+    } catch(error) {
         report.error(`${chalk.red('User')} ${chalk.magenta(userId)} ${chalk.red('not found on energy star count change')}`);
         throw new Error('User not found on star count change');
-    });
+    }
 }

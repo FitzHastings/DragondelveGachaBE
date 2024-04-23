@@ -17,22 +17,19 @@ import report from '../report.js';
 import chalk from 'chalk';
 import User from '../models/User.js';
 
-export default function (userId, amount = 1) {
-    User.findById(userId).then((user) => {
+export default async function (userId, amount = 1) {
+    try {
+        const user = await User.findById(userId);
         if (user.currentEnergy >= amount) {
             user.currentEnergy -= amount;
-            user.save().then(() => {
-                report.info(`${chalk.cyan('Energy count decremented for user')} ${chalk.magenta(userId)}`);
-            }).catch(() => {
-                report.error(`${chalk.red('Error while saving user energy count for user')} ${chalk.magenta(userId)}`);
-                throw new Error('Error while saving user energy count');
-            });
+            await user.save()
+            report.info(`${chalk.cyan('Energy count decremented for user')} ${chalk.magenta(userId)}`);
         } else {
             report.warn(`${chalk.yellow('Not enough energy count for user')} ${chalk.magenta(userId)}`);
             throw new Error('Not enough energy count');
         }
-    }).catch(() => {
+    } catch(error) {
         report.error(`${chalk.red('User')} ${chalk.magenta(userId)} ${chalk.red('not found on energy count decrement')}`);
         throw new Error('User not found on energy decrement');
-    });
+    }
 }

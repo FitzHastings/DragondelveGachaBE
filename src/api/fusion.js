@@ -92,7 +92,7 @@ export async function performFusion(req, res) {
     }
 
     try {
-        onStarsSpent(req.body.from.id, fusion.cost);
+        await onStarsSpent(req.body.from.id, fusion.cost);
     } catch (error) {
         res.code(400).send('Bad Request');
         return
