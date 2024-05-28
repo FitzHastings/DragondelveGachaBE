@@ -19,7 +19,7 @@ import User from '../models/User.js';
 
 export default async function (userId, amount = 1) {
     try {
-        const user = User.findById(userId)
+        const user = await User.findById(userId)
         if (user.currentStars >= amount) {
             user.currentStars -= amount;
         } else {

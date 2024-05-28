@@ -92,14 +92,15 @@ export async function performFusion(req, res) {
     }
 
     try {
+        console.log(req.body.from)
+        console.log(fusion);
         await onStarsSpent(req.body.from.id, fusion.cost);
     } catch (error) {
-        res.code(400).send('Bad Request');
+        res.status(400).send('Bad Request');
         return
     }
     const deletionPromises = characters.map(character => Character.deleteOne({ _id: character._id }));
     await Promise.all(deletionPromises);
-
     const character = await Character.create({
         name: template.name,
         templateId: template._id,
