@@ -15,12 +15,13 @@
 
 import Character from '../models/Character.js';
 import Template from '../models/Template.js';
+import settingCache from '../cache/SettingCache.js';
 
 export async function getCollection(req, res) {
     const user = req.body.from;
     const setting = req.query.setting || 'all';
-    console.log(setting);
     const sorting = req.query.sorting;
+    const uniqueTemplates = new Set();
 
     const characters = await Character.find({ownerId: user.id})
     const responseCollection = [];
@@ -34,8 +35,10 @@ export async function getCollection(req, res) {
             responseTemplate.id = responseTemplate._id;
             delete responseTemplate._id;
             responseCharacter.template = responseTemplate;
-            if (responseTemplate.setting === setting || setting === 'all' || typeof setting === 'undefined')
+            if (responseTemplate.setting === setting || setting === 'all' || typeof setting === 'undefined') {
                 responseCollection.push(responseCharacter);
+                uniqueTemplates.add(responseTemplate.id);
+            }
         }));
     }
     await Promise.all(characterPromises);
@@ -64,5 +67,5 @@ export async function getCollection(req, res) {
         });
     }
 
-    res.json(responseCollection);
+    res.json({templateCount: settingCache.settingMap.get(setting || 'all'), uniqueCount: uniqueTemplates.size, responseCollection});
 }

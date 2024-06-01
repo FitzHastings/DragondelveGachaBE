@@ -20,6 +20,7 @@ import connectToMongoose from './mongo.js';
 import setupAPI from './api.js';
 import templateCache from './cache/CharacterPool.js';
 import mongoose from 'mongoose';
+import settingCache from './cache/SettingCache.js';
 
 async function startServer() {
     report.info(chalk.cyan('Dragondelve Gacha Server is Starting Up'));
@@ -33,6 +34,7 @@ async function startServer() {
 
     await connectToMongoose();
     await templateCache.warm();
+    await settingCache.warm();
     await setupAPI();
 }
 
