@@ -27,7 +27,7 @@ export default async function (userId, amount = 1) {
             throw new Error('Not enough star count');
         }
 
-        await user.save()
+        await user.save();
         report.info(`${chalk.cyan('Star count changed for user')} ${chalk.magenta(userId)}`);
     } catch(error) {
         report.error(`${chalk.red('User')} ${chalk.magenta(userId)} ${chalk.red('not found on energy star count change')}`);

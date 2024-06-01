@@ -16,26 +16,53 @@
 import Character from '../models/Character.js';
 import Template from '../models/Template.js';
 
-export function getCollection(req, res) {
+export async function getCollection(req, res) {
     const user = req.body.from;
+    const setting = req.query.setting || 'all';
+    console.log(setting);
+    const sorting = req.query.sorting;
 
-    Character.find({ownerId: user.id}).then((characters) => {
-        const responseCollection = [];
-        const characterPromises = [];
-        for (const character of characters) {
-            const responseCharacter = character.toObject();
-            responseCharacter.id = responseCharacter._id;
-            delete responseCharacter._id;
-            responseCollection.push(responseCharacter);
-            characterPromises.push(Template.findById(responseCharacter.templateId).then((template) => {
-                const responseTemplate = template.toObject();
-                responseTemplate.id = responseTemplate._id;
-                delete responseTemplate._id;
-                responseCharacter.template = responseTemplate;
-            }));
-        }
-        Promise.all(characterPromises).then(() => {
-            res.json(responseCollection);
+    const characters = await Character.find({ownerId: user.id})
+    const responseCollection = [];
+    const characterPromises = [];
+    for (const character of characters) {
+        const responseCharacter = character.toObject();
+        responseCharacter.id = responseCharacter._id;
+        delete responseCharacter._id;
+        characterPromises.push(Template.findById(responseCharacter.templateId).then((template) => {
+            const responseTemplate = template.toObject();
+            responseTemplate.id = responseTemplate._id;
+            delete responseTemplate._id;
+            responseCharacter.template = responseTemplate;
+            if (responseTemplate.setting === setting || setting === 'all' || typeof setting === 'undefined')
+                responseCollection.push(responseCharacter);
+        }));
+    }
+    await Promise.all(characterPromises);
+    if (sorting === 'name') {
+        responseCollection.sort((a, b) => {
+            if (a.name < b.name) {
+                return -1;
+            }
+            if (a.name > b.name) {
+                return 1;
+            }
+            return 0;
         });
-    });
+    } else if (sorting === 'rarity') {
+        // Define the order of rarity
+        const rarityOrder = {
+            'legendary': 1,
+            'epic': 2,
+            'rare': 3,
+            'uncommon': 4,
+            'common': 5
+        };
+
+        responseCollection.sort((a, b) => {
+            return rarityOrder[a.template.rarity] - rarityOrder[b.template.rarity];
+        });
+    }
+
+    res.json(responseCollection);
 }
