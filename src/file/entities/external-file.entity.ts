@@ -18,7 +18,6 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { GeneralEntity } from '../../common/entities/general.entity.js';
 import { User } from '../../user/entities/user.entity';
-import { Product } from '../../product/entities/product.entity';
 
 /**
  * Represents an external file.
@@ -74,9 +73,6 @@ export class ExternalFile extends GeneralEntity {
     @Column()
     @ApiProperty({ type: String, description: 'MIME media type of the file (Read Only)', example: 'image' })
     public mimetype: string;
-
-    @OneToMany(() => Product, (product) => product.image)
-    public products: Product[];
 
     /**
      * Represents an array of User objects.
