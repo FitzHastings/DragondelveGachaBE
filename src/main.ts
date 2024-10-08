@@ -38,8 +38,8 @@ async function bootstrap(): Promise<void> {
 
     if (process.env.EXPOSE_SWAGGER) {
         const config = new DocumentBuilder()
-            .setTitle('Generic Admin API')
-            .setDescription('Generic Admin')
+            .setTitle('Dragondelve Gacha API')
+            .setDescription('Gacha Docs')
             .setVersion('0.0.1')
             .addBearerAuth()
             .build();

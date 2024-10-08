@@ -26,6 +26,7 @@ import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { FileModule } from './file/file.module';
+import { WorldModule } from './world/world.module';
 
 @Module({
     imports: [
@@ -51,7 +52,8 @@ import { FileModule } from './file/file.module';
         CommonModule,
         AuthModule,
         FileModule,
-        UserModule
+        UserModule,
+        WorldModule
     ],
     controllers: [AppController],
     providers: [AppService]

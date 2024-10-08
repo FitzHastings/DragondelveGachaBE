@@ -68,20 +68,55 @@ export class User extends GeneralEntity {
     })
     public gender: string;
 
+    /**
+     * Represents the role of a user within a system.
+     * The role is typically used to control access permissions and determine actions that can be performed by the user.
+     * Common values might include 'admin', 'editor', 'viewer', etc.
+     *
+     * @type {string}
+     */
     @ApiPropertyOptional({ description: 'User Role', type: String, example: 'ADMIN' })
     @IsString()
     @IsOptional()
     @Column()
     public role: string;
 
+    /**
+     * Represents an external image file.
+     *
+     * @type {ExternalFile}
+     *
+     * The `image` variable is used to handle an external file containing image data.
+     * This can be utilized for tasks such as loading, processing, and displaying
+     * images in various formats within the application.
+     */
     @ManyToOne(() => ExternalFile, (externalFile) => externalFile.users)
     @JoinColumn({ name: 'image_id' })
     public image: ExternalFile;
 
+    /**
+     * A unique identifier for an image.
+     * This ID is used to reference and manage a specific image within the system.
+     * It should be a non-negative integer.
+     *
+     * @type {number}
+     */
     @ApiPropertyOptional({ description: 'User Image Id', type: Number, example: 44 })
     @IsInt()
     @IsPositive()
     @IsOptional()
     @Column({ name: 'image_id', nullable: true })
     public imageId: number;
+
+    /**
+     * Represents the amount of energy currency the user has.
+     */
+    @Column({ default: '0' })
+    public energy: number;
+
+    /**
+     * Represents the amount of dust currency the user has.
+     */
+    @Column({ default: '0' })
+    public dust: number;
 }
