@@ -13,18 +13,18 @@
    limitations under the License.
 */
 
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { GeneralEntity } from '../../common/entities/general.entity.js';
 import { User } from '../../user/entities/user.entity';
+import { SettingWorld } from '../../world/entities/setting-world.entity';
 
 /**
  * Represents an external file.
  *
  * @class
  * @extends GeneralEntity
- * @since v0.5.0
  */
 @Entity('files')
 export class ExternalFile extends GeneralEntity {
@@ -78,8 +78,22 @@ export class ExternalFile extends GeneralEntity {
      * Represents an array of User objects.
      *
      * @type {User[]} Users
-     * @since v0.5.0
      */
     @OneToMany(() => User, (user) => user.image, { onDelete: 'CASCADE' })
     public users: User[];
+
+    /**
+     * An array of `SettingWorld` objects.
+     *
+     * @type {SettingWorld[]}
+     */
+    @ManyToMany(() => SettingWorld, (settingWorld) => settingWorld.images)
+    public settings: SettingWorld[];
+
+    /**
+     * An array of SettingWorld objects.
+     * @type {SettingWorld[]}
+     */
+    @OneToMany(() => SettingWorld, (settingWorld) => settingWorld.logo)
+    public setting: SettingWorld[];
 }
