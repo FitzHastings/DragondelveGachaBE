@@ -17,6 +17,7 @@ import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'ty
 
 import { GeneralEntity } from '../../common/entities/general.entity.js';
 import { ExternalFile } from '../../file/entities/external-file.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * Represents the setting world entity that extends the GeneralEntity.
@@ -28,6 +29,7 @@ export class SettingWorld extends GeneralEntity {
     /**
      * Represents a name as a string.
      */
+    @ApiProperty({ type: String, description: 'name of the setting', example: 'TWINT' })
     @Column({ nullable: true })
     public name: string;
 
