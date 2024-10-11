@@ -17,6 +17,7 @@ import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post,
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { JwtGuard } from '../auth/guards/jwt.guard';
+import { IsAdminGuard } from '../auth/guards/is-admin';
 
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
@@ -60,7 +61,7 @@ export class UserController {
     @ApiParam({ name: 'id', description: 'Id of the requested user' })
     @ApiOkResponse({ type: User, description: 'Updated User' })
     @ApiBearerAuth()
-    @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard, IsAdminGuard)
     @UseInterceptors(ClassSerializerInterceptor)
     @Get('/:id')
     public async getOne(@Param('id') id: number): Promise<User> {
@@ -80,7 +81,7 @@ export class UserController {
     @UseInterceptors(ClassSerializerInterceptor)
     @Post('/register')
     public async register(@Body() user: User): Promise<User> {
-        user.role = 'Unverified';
+        user.role = 'user';
         const response = await this.userService.create(user);
         delete response.password;
         return response;
@@ -97,7 +98,7 @@ export class UserController {
     @ApiUnauthorizedResponse({ description: 'Invalid credentials provided' })
     @ApiOperation({ summary: 'Create a New User' })
     @ApiBearerAuth()
-    @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard, IsAdminGuard)
     @UseInterceptors(ClassSerializerInterceptor)
     @Post('/')
     public async create(@Body() user: User): Promise<User> {
@@ -116,7 +117,7 @@ export class UserController {
     @ApiParam({ name: 'id', description: 'Id of the user to be deleted' })
     @ApiOkResponse({ description: 'No Data' })
     @ApiBearerAuth()
-    @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard, IsAdminGuard)
     @Delete('/:id')
     public async deleteOne(@Param() id: number): Promise<void> {
         await this.userService.delete(id);

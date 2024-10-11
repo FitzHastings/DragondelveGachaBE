@@ -22,6 +22,7 @@ import * as uuid from 'uuid';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { JwtGuard } from '../auth/guards/jwt.guard';
+import { IsAdminGuard } from '../auth/guards/is-admin';
 
 import { ExternalFile } from './entities/external-file.entity';
 import { FileService } from './file.service';
@@ -51,7 +52,7 @@ export class FileController {
     @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
     @ApiOkResponse({ type: ExternalFile, description: 'Reified File Handler' })
     @ApiBearerAuth()
-    @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard, IsAdminGuard)
     @ApiOperation({ summary: 'Upload a file' })
     @UseInterceptors(
         FilesInterceptor('file', 10, {
