@@ -14,10 +14,11 @@
 */
 
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsArray, IsInt, IsOptional, IsPositive, IsString } from 'class-validator';
 
 import { GeneralEntity } from '../../common/entities/general.entity.js';
 import { ExternalFile } from '../../file/entities/external-file.entity';
-import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * Represents the setting world entity that extends the GeneralEntity.
@@ -30,13 +31,15 @@ export class SettingWorld extends GeneralEntity {
      * Represents a name as a string.
      */
     @ApiProperty({ type: String, description: 'name of the setting', example: 'TWINT' })
-    @Column({ nullable: true })
+    @IsString()
+    @Column()
     public name: string;
 
     /**
      * An array of external file objects representing images.
      * Each object in the array contains metadata and content for a specific image file.
      */
+    @ApiProperty({ description: 'Setting Images (Read Only)', type: () => ExternalFile, isArray: true })
     @ManyToMany(() => ExternalFile, (externalFile) => externalFile.settings)
     @JoinTable({ name: 'setting_images' })
     public images: ExternalFile[];
@@ -47,6 +50,7 @@ export class SettingWorld extends GeneralEntity {
      *
      * @type {ExternalFile}
      */
+    @ApiProperty({ description: 'Logo Image (Read Only)', type: () => ExternalFile })
     @ManyToOne(() => ExternalFile, (externalFile) => externalFile.setting)
     @JoinColumn({ name: 'logo_id' })
     public logo: ExternalFile;
@@ -59,6 +63,25 @@ export class SettingWorld extends GeneralEntity {
      *
      * @type {number}
      */
+    @ApiProperty({ type: Number, description: 'id of the logo', example: 11 })
+    @IsInt()
+    @IsPositive()
     @Column({ name: 'logo_id', nullable: true })
     public logoId: number;
+
+    // DTO Only Section
+
+    /**
+     * Array of image identifier numbers.
+     *
+     * This array holds numeric IDs corresponding to specific images. Each number in the array
+     * should be a unique identifier that can be used to retrieve or reference an image within
+     * an application or database.
+     *
+     * @type {number[]}
+     */
+    @ApiPropertyOptional({ description: 'Ids of the images', type: Number, isArray: true })
+    @IsArray()
+    @IsOptional()
+    public imageIds: number[];
 }

@@ -16,6 +16,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { FileModule } from '../file/file.module';
+
 import { WorldController } from './world.controller';
 import { WorldService } from './world.service';
 import { SettingWorld } from './entities/setting-world.entity';
@@ -25,7 +27,7 @@ import { SettingWorld } from './entities/setting-world.entity';
  * for managing world-related functional features.
  */
 @Module({
-    imports: [TypeOrmModule.forFeature([SettingWorld])],
+    imports: [TypeOrmModule.forFeature([SettingWorld]), FileModule],
     controllers: [WorldController],
     providers: [WorldService]
 })
