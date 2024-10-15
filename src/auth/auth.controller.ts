@@ -80,7 +80,6 @@ export class AuthController {
     @Post('login')
     public async login(@Body() loginDto: LoginDto): Promise<AccessTokenDto> {
         const user = await this.userService.findByUsername(loginDto.username);
-        console.log(user);
         if (user === null) throw new UnauthorizedException('Username or password is incorrect');
         return this.authService.login(user, loginDto.password);
     }
