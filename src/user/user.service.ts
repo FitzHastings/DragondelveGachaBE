@@ -85,9 +85,7 @@ export class UserService {
      * @return {Promise<User>} - A promise that resolves to the found user, if found. Otherwise, resolves to undefined.
      */
     public async findByUsername(username: string): Promise<User> {
-        const user = await this.usersRepository.findOne({ where: { username } });
-        delete user.password;
-        return user;
+        return await this.usersRepository.findOne({ where: { username } });
     }
 
     /**
