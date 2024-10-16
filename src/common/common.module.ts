@@ -16,7 +16,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { GeneralEntity } from './entities/general.entity.js';
+import { GeneralEntity } from './entities/general.entity';
 import { TimestampedEntity } from './entities/timestamped.entity';
 
 @Module({

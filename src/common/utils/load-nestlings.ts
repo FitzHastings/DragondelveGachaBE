@@ -17,7 +17,7 @@ import * as process from 'node:process';
 
 import { EntityNotFoundError, In, Repository } from 'typeorm';
 
-import { GeneralEntity } from '../entities/general.entity.js';
+import { GeneralEntity } from '../entities/general.entity';
 
 /**
  * Asynchronously loads nestling entities based on their IDs.

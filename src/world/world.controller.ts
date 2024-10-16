@@ -19,6 +19,7 @@ import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { PeekDto } from '../common/dtos/peek.dto';
 import { IsAdminGuard } from '../auth/guards/is-admin';
+import { PagedEntities } from '../common/dtos/paged-entities.dto';
 
 import { WorldService } from './world.service';
 import { SettingWorld } from './entities/setting-world.entity';
@@ -50,7 +51,7 @@ export class WorldController {
     @ApiUnauthorizedResponse({ description: 'Invalid credentials provided' })
     @UseGuards(JwtGuard)
     @Get('/')
-    public async findAll(@Query('page') page?: number, @Query('limit') limit?: number): Promise<SettingWorld[]> {
+    public async findAll(@Query('page') page?: number, @Query('limit') limit?: number): Promise<PagedEntities<SettingWorld>> {
         return await this.worldService.findAll(page, limit);
     }
 

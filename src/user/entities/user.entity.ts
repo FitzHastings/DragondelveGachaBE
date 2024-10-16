@@ -17,7 +17,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { GeneralEntity } from '../../common/entities/general.entity.js';
+import { GeneralEntity } from '../../common/entities/general.entity';
 import { ExternalFile } from '../../file/entities/external-file.entity';
 
 import { Gender } from './gender.enum';

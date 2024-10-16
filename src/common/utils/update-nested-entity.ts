@@ -15,7 +15,7 @@
 
 import { Repository } from 'typeorm';
 
-import { GeneralEntity } from '../entities/general.entity.js';
+import { GeneralEntity } from '../entities/general.entity';
 
 /**
  * Updates or creates nested entities in the repository based on the provided update data transfer objects (DTOs).

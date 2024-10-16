@@ -13,18 +13,17 @@
    limitations under the License.
 */
 
-import { FindManyOptions } from 'typeorm';
-
 import { GeneralEntity } from '../entities/general.entity';
 
-const MAX_PAGE_SIZE = 50;
-
-export function generatePagingOptions(page = 1, limit = MAX_PAGE_SIZE): FindManyOptions<GeneralEntity> {
-    const trueLimit = Math.min(MAX_PAGE_SIZE, limit);
-    const offset = (page - 1) * trueLimit;
-
-    return {
-        skip: offset,
-        take: trueLimit
-    };
+/**
+ * Represents a collection of entities along with pagination metadata.
+ *
+ * @template T - The type of entities contained in the collection. Must extend the GeneralEntity interface.
+ *
+ * @property {T[]} entities - The array of entities retrieved in the current page.
+ * @property {number} total - The total number of entities available across all pages.
+ */
+export interface PagedEntities<T extends GeneralEntity> {
+    entities: T[];
+    total: number;
 }

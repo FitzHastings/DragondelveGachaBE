@@ -17,7 +17,7 @@ import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'ty
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsInt, IsOptional, IsPositive, IsString } from 'class-validator';
 
-import { GeneralEntity } from '../../common/entities/general.entity.js';
+import { GeneralEntity } from '../../common/entities/general.entity';
 import { ExternalFile } from '../../file/entities/external-file.entity';
 
 /**
@@ -66,6 +66,7 @@ export class SettingWorld extends GeneralEntity {
     @ApiProperty({ type: Number, description: 'id of the logo', example: 11 })
     @IsInt()
     @IsPositive()
+    @IsOptional()
     @Column({ name: 'logo_id', nullable: true })
     public logoId: number;
 

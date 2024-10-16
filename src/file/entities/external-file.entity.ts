@@ -16,7 +16,7 @@
 import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { GeneralEntity } from '../../common/entities/general.entity.js';
+import { GeneralEntity } from '../../common/entities/general.entity';
 import { User } from '../../user/entities/user.entity';
 import { SettingWorld } from '../../world/entities/setting-world.entity';
 
