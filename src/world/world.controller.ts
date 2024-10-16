@@ -114,7 +114,7 @@ export class WorldController {
      *
      * @return {Promise<SettingWorld>} A promise that resolves to the updated Setting object.
      */
-    @ApiBody({ type: UpdateSettingDto })
+    @ApiBody({ type: UpdateSettingDto, description: 'Setting World Fields to be updated' })
     @ApiOperation({ summary: 'Update Setting' })
     @ApiParam({ name: 'id', description: 'Id of the Setting to be updated' })
     @ApiOkResponse({ type: SettingWorld, description: 'Updated Setting' })

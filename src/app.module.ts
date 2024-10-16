@@ -27,6 +27,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { FileModule } from './file/file.module';
 import { WorldModule } from './world/world.module';
+import { RarityModule } from './rarity/rarity.module';
 
 @Module({
     imports: [
@@ -53,7 +54,8 @@ import { WorldModule } from './world/world.module';
         AuthModule,
         FileModule,
         UserModule,
-        WorldModule
+        WorldModule,
+        RarityModule
     ],
     controllers: [AppController],
     providers: [AppService]
