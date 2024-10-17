@@ -13,16 +13,17 @@
    limitations under the License.
 */
 
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { IsInt, IsPositive, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { GeneralEntity } from '../../common/entities/general.entity';
+import { CharacterTemplate } from '../../template/entities/character-template.entity';
 
 /**
  * The Rarity class represents a type of rarity with associated properties such as its name and probabilistic weight.
  */
-@Entity('rarity')
+@Entity('rarities')
 export class Rarity extends GeneralEntity {
     /**
      * Represents rarity name such as common, rare, epic.
@@ -40,4 +41,12 @@ export class Rarity extends GeneralEntity {
     @Column()
     @ApiProperty({ description: 'Probabilistic Weight of this rarity ot appear in Roll API', type: Number, example: 2 })
     public weight: number;
+
+    /**
+     * Array holding CharacterTemplate objects of this rarity.
+     *
+     * @type {CharacterTemplate[]}
+     */
+    @OneToMany(() => CharacterTemplate, (template) => template.rarity)
+    public templates: CharacterTemplate[];
 }
