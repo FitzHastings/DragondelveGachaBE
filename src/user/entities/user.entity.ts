@@ -111,12 +111,16 @@ export class User extends GeneralEntity {
     /**
      * Represents the amount of energy currency the user has.
      */
+    @IsInt()
+    @IsOptional()
     @Column({ default: '0' })
     public energy: number;
 
     /**
      * Represents the amount of dust currency the user has.
      */
+    @IsInt()
+    @IsOptional()
     @Column({ default: '0' })
     public dust: number;
 }

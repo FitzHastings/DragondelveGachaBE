@@ -13,14 +13,16 @@
    limitations under the License.
 */
 
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, UseGuards, UseInterceptors } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { IsAdminGuard } from '../auth/guards/is-admin';
+import { PagedEntities } from '../common/dtos/paged-entities.dto';
 
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
+import { PatchUserDto } from './dto/patch-user.dto';
 
 
 /**
@@ -42,13 +44,16 @@ export class UserController {
      *
      * @returns {Promise<User[]>} A promise that resolves to an array of User objects representing all users.
      */
-    @ApiOperation({ summary: 'Get all Users' })
-    @ApiOkResponse({ type: Array<User>, description: 'All users in the system' })
+    @ApiOperation({ summary: 'Get All Rarities' })
+    @ApiOkResponse({ type: User, description: 'All Rarities', isArray: true })
+    @ApiQuery({ name: 'page', required: false, description: 'Optional page number requested' })
+    @ApiQuery({ name: 'limit', required: false, description: 'Optional page size requested' })
     @ApiBearerAuth()
-    @UseGuards(JwtGuard)
+    @ApiUnauthorizedResponse({ description: 'Invalid credentials provided' })
+    @UseGuards(JwtGuard, IsAdminGuard)
     @Get('/')
-    public async getAll(): Promise<User[]> {
-        return await this.userService.findAll();
+    public async findAll(@Query('page') page?: number, @Query('limit') limit?: number): Promise<PagedEntities<User>> {
+        return await this.userService.findAll(page, limit);
     }
 
     /**
@@ -82,6 +87,9 @@ export class UserController {
     @Post('/register')
     public async register(@Body() user: User): Promise<User> {
         user.role = 'user';
+        user.dust = 0;
+        user.energy = 0;
+
         const response = await this.userService.create(user);
         delete response.password;
         return response;
@@ -105,6 +113,18 @@ export class UserController {
         const response = await this.userService.create(user);
         delete response.password;
         return response;
+    }
+
+    @ApiBody({ type: PatchUserDto, description: 'User Fields to be updated' })
+    @ApiOperation({ summary: 'Update User' })
+    @ApiParam({ name: 'id', description: 'Id of the User to be updated' })
+    @ApiOkResponse({ type: User, description: 'Updated User' })
+    @ApiBearerAuth()
+    @ApiUnauthorizedResponse({ description: 'Invalid credentials provided' })
+    @UseGuards(JwtGuard, IsAdminGuard)
+    @Patch('/:id')
+    public async update(@Param('id') id: number, @Body() user: PatchUserDto) : Promise<User> {
+        return await this.userService.patchUser(id, user);
     }
 
     /**

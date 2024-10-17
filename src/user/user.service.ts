@@ -18,13 +18,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
+import { generatePagingOptions } from '../common/utils/generate-paging-options';
+import { PagedEntities } from '../common/dtos/paged-entities.dto';
+
 import { User } from './entities/user.entity';
 import { PatchUserDto } from './dto/patch-user.dto';
-
-const userOverviewFields: Array<keyof User> = [
-    'id',
-    'username'
-];
 
 const SALT_ROUNDS = 10;
 
@@ -55,7 +53,9 @@ export class UserService {
         if (existingUser) throw new Error('User with this username already exists');
 
         user.password = await this.hashPassword(user.password);
-        return await this.usersRepository.save(user);
+        const savedUser = await this.usersRepository.save(user);
+        delete savedUser.password;
+        return savedUser;
     }
 
     /**
@@ -67,7 +67,7 @@ export class UserService {
      * @throws {NotFoundException} - If the user with the provided id does not exist.
      */
     public async patchUser(id: number, patchUserDto: PatchUserDto): Promise<User> {
-        const user = await this.findOne(id);
+        const user = await this.usersRepository.findOne({ where: { id } });
 
         if (!user) throw new NotFoundException(`User #${id} not found`);
         if (patchUserDto.password)
@@ -75,6 +75,7 @@ export class UserService {
 
         const patchedUser = Object.assign(user, patchUserDto);
         await this.usersRepository.save(patchedUser);
+        delete patchedUser.password;
         return patchedUser;
     }
 
@@ -98,7 +99,7 @@ export class UserService {
     public async findOne(id: number): Promise<User> {
         const user = await this.usersRepository.findOne({
             where: { id },
-            relations: []
+            relations: ['image']
         });
 
         delete user.password;
@@ -110,11 +111,16 @@ export class UserService {
      *
      * @return {Promise<User[]>} A promise that resolves to an array of User objects representing all users found.
      */
-    public async findAll(): Promise<User[]> {
-        return this.usersRepository.find({
-            select: userOverviewFields,
-            relations: []
+    public async findAll(page: number, limit: number): Promise<PagedEntities<User>> {
+        const [ entities, total ] = await this.usersRepository.findAndCount({
+            relations: ['image'],
+            ...generatePagingOptions(page, limit)
         });
+
+        for (const user of entities)
+            delete user.password;
+
+        return { entities, total };
     }
 
     /**

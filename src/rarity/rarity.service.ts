@@ -41,7 +41,6 @@ export class RarityService {
      */
     public async findAll(page?: number, limit?: number): Promise<PagedEntities<Rarity>> {
         const [ entities, total ] = await this.rarityRepository.findAndCount({
-            relations: ['logo'],
             ...generatePagingOptions(page, limit)
         });
         return { entities, total };

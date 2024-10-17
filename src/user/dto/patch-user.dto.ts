@@ -49,6 +49,18 @@ export class PatchUserDto {
     public password?: string;
 
     /**
+     * Represents the role of a user within a system.
+     * The role is typically used to control access permissions and determine actions that can be performed by the user.
+     * Common values might include 'admin', 'editor', 'viewer', etc.
+     *
+     * @type {string}
+     */
+    @ApiPropertyOptional({ description: 'User Role', type: String, example: 'ADMIN' })
+    @IsString()
+    @IsOptional()
+    public role: string;
+
+    /**
      * Represents the gender of an individual.
      * @type {string} Gender
      * @description Possible values: "male", "female", "other".
@@ -59,10 +71,33 @@ export class PatchUserDto {
     @IsOptional()
     public gender?: string;
 
+    /**
+     * A unique identifier for an image.
+     *
+     * This optional numeric property is used to reference a specific image in a database
+     * or content management system. If `imageId` is provided, it should be a non-negative number.
+     *
+     * @type {number}
+     * @optional
+     */
     @ApiPropertyOptional({ description: 'User Image Id', type: Number, example: 44 })
     @IsInt()
     @IsPositive()
     @IsOptional()
     public imageId?: number;
+
+    /**
+     * Represents the amount of energy currency the user has.
+     */
+    @IsInt()
+    @IsOptional()
+    public energy: number;
+
+    /**
+     * Represents the amount of dust currency the user has.
+     */
+    @IsInt()
+    @IsOptional()
+    public dust: number;
 }
 
