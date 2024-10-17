@@ -138,7 +138,7 @@ export class WorldController {
     @ApiBearerAuth()
     @ApiUnauthorizedResponse({ description: 'Invalid credentials provided' })
     @UseGuards(JwtGuard, IsAdminGuard)
-    @Delete('/')
+    @Delete('/:id')
     public async remove(@Param('id') id: number): Promise<void> {
         return await this.worldService.remove(id);
     }
