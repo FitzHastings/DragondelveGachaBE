@@ -13,12 +13,13 @@
    limitations under the License.
 */
 
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsInt, IsOptional, IsPositive, IsString } from 'class-validator';
 
 import { GeneralEntity } from '../../common/entities/general.entity';
 import { ExternalFile } from '../../file/entities/external-file.entity';
+import { CharacterTemplate } from '../../template/entities/character-template.entity';
 
 /**
  * Represents the setting world entity that extends the GeneralEntity.
@@ -85,4 +86,15 @@ export class SettingWorld extends GeneralEntity {
     @IsArray()
     @IsOptional()
     public imageIds: number[];
+
+    /**
+     * Array of character templates used to define properties and behavior of game characters.
+     *
+     * Each template object in this array contains key-value pairs specifying attributes
+     * such as character name, health points, skills, abilities, and other relevant metadata.
+     *
+     * @type {CharacterTemplate[]}
+     */
+    @OneToMany(() => CharacterTemplate, (characterTemplate) => characterTemplate.setting)
+    public templates: CharacterTemplate[];
 }

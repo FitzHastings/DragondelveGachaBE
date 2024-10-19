@@ -19,6 +19,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { GeneralEntity } from '../../common/entities/general.entity';
 import { User } from '../../user/entities/user.entity';
 import { SettingWorld } from '../../world/entities/setting-world.entity';
+import { CharacterTemplate } from '../../template/entities/character-template.entity';
 
 /**
  * Represents an external file.
@@ -96,4 +97,16 @@ export class ExternalFile extends GeneralEntity {
      */
     @OneToMany(() => SettingWorld, (settingWorld) => settingWorld.logo)
     public setting: SettingWorld[];
+
+    /**
+     * Represents a full list of character templates.
+     */
+    @OneToMany(() => CharacterTemplate, (template) => template.fullImage)
+    public templatesFull: CharacterTemplate;
+
+    /**
+     * Represents a collection of small character templates.
+     */
+    @OneToMany(() => CharacterTemplate, (template) => template.smallImage)
+    public templatesSmall: CharacterTemplate;
 }

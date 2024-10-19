@@ -41,6 +41,7 @@ export class TemplateService {
      */
     public async findAll(page?: number, limit?: number): Promise<PagedEntities<CharacterTemplate>> {
         const [ entities, total ] = await this.templateRepository.findAndCount({
+            relations: ['rarity', 'setting', 'smallImage'],
             ...generatePagingOptions(page, limit)
         });
         return { entities, total };
@@ -62,7 +63,10 @@ export class TemplateService {
      * @return {Promise<CharacterTemplate>} A promise that resolves to the found CharacterTemplate.
      */
     public async findOne(id: number): Promise<CharacterTemplate> {
-        return await this.templateRepository.findOne({ where: { id } });
+        return await this.templateRepository.findOne({
+            where: { id },
+            relations: ['rarity', 'setting', 'fullImage', 'smallImage']
+        });
     }
 
     /**
@@ -87,7 +91,7 @@ export class TemplateService {
         const template = await this.templateRepository.findOne({ where: { id } });
         if (!template) throw new NotFoundException(`Character Template #${id} does not exist`);
 
-        const patchedRarity = { ...template, patchTemplate };
+        const patchedRarity = { ...template, ...patchTemplate };
         return await this.templateRepository.save(patchedRarity);
     }
 

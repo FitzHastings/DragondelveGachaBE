@@ -59,7 +59,6 @@ export class UpdateCharacterTemplateDto {
      */
     @ApiPropertyOptional({ description: 'Indicates whether a template can be rolled for in roll API', type: Boolean, example: true })
     @IsBoolean()
-    @IsOptional()
     public isRollable?: boolean;
 
     /**
@@ -76,4 +75,31 @@ export class UpdateCharacterTemplateDto {
     @IsPositive()
     @IsOptional()
     public rarityId: number;
+
+    /**
+     * Unique identifier for a specific setting.
+     * @type {number}
+     */
+    @ApiPropertyOptional({ description: 'id of the setting', type: Number, example: 26 })
+    @IsInt()
+    @IsPositive()
+    public settingId: number;
+
+    /**
+     * Represents the unique identifier for a full image.
+     * @type {number}
+     */
+    @IsInt()
+    @IsPositive()
+    @IsOptional()
+    public fullImageId: number;
+
+    /**
+     * Represents the unique identifier for a full image.
+     * @type {number}
+     */
+    @IsInt()
+    @IsPositive()
+    @IsOptional()
+    public smallImageId: number;
 }

@@ -19,6 +19,8 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { GeneralEntity } from '../../common/entities/general.entity';
 import { Rarity } from '../../rarity/entities/rarity.entity';
+import { ExternalFile } from '../../file/entities/external-file.entity';
+import { SettingWorld } from '../../world/entities/setting-world.entity';
 
 /**
  * Represents a template for a character entity.
@@ -95,4 +97,63 @@ export class CharacterTemplate extends GeneralEntity {
     @IsPositive()
     @Column({ nullable: true, name:'rarity_id' })
     public rarityId: number;
+
+    /**
+     * Setting for managing world configuration in the application.
+     * @type {SettingWorld}
+     */
+    @ManyToOne(() => SettingWorld, (settingWorld) => settingWorld.templates)
+    @JoinColumn({ name: 'setting_id' })
+    public setting: SettingWorld;
+
+    /**
+     * Unique identifier for a specific setting.
+     * @type {number}
+     */
+    @ApiProperty({ description: 'id of full image external file', type: Number, example: 26 })
+    @IsInt()
+    @IsPositive()
+    @Column({ nullable: true, name: 'setting_id' })
+    public settingId: number;
+
+    /**
+     * Represents an external file that contains the full image data
+     * @name fullImage
+     * @type {ExternalFile}
+     */
+    @ManyToOne(() => ExternalFile, (externalFile) => externalFile.templatesFull)
+    @JoinColumn({ name: 'full_image_id' })
+    public fullImage: ExternalFile;
+
+    /**
+     * Represents the unique identifier for a full image.
+     * @type {number}
+     */
+    @ApiPropertyOptional({ description: 'id of full image external file', type: Number, example: 50 })
+    @IsInt()
+    @IsPositive()
+    @IsOptional()
+    @Column({ nullable: true, name: 'full_image_id' })
+    public fullImageId: number;
+
+    /**
+     * Represents a small image file used within the application.
+     * This could be an avatar, thumbnail, or any other small-sized image resource.
+     *
+     * @type {ExternalFile}
+     */
+    @ManyToOne(() => ExternalFile, (externalFile) => externalFile.templatesSmall)
+    @JoinColumn({ name: 'small_image_id' })
+    public smallImage: ExternalFile;
+
+    /**
+     * Represents the unique identifier for a full image.
+     * @type {number}
+     */
+    @ApiPropertyOptional({ description: 'id of small image external file', type: Number, example: 11 })
+    @IsInt()
+    @IsPositive()
+    @IsOptional()
+    @Column({ nullable: true, name: 'small_image_id' })
+    public smallImageId: number;
 }
