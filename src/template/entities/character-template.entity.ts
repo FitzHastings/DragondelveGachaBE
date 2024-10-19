@@ -49,7 +49,7 @@ export class CharacterTemplate extends GeneralEntity {
     @IsString()
     @IsNotEmpty()
     @Column()
-    public desciption: string;
+    public description: string;
 
     /**
      * A string containing a quotation.

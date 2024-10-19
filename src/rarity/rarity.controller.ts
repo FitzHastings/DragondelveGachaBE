@@ -13,14 +13,13 @@
    limitations under the License.
 */
 
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { PagedEntities } from '../common/dtos/paged-entities.dto';
 import { PeekDto } from '../common/dtos/peek.dto';
 import { IsAdminGuard } from '../auth/guards/is-admin';
-import { SettingWorld } from '../world/entities/setting-world.entity';
 
 import { PatchRarityDto } from './dtos/patch-rarity.dto';
 import { RarityService } from './rarity.service';
@@ -29,6 +28,7 @@ import { Rarity } from './entities/rarity.entity';
 /**
  * RarityController handles all endpoints related to rarity.
  */
+@ApiTags('Rarity Module')
 @Controller('rarity')
 export class RarityController {
     public constructor(private readonly rarityService: RarityService) {
@@ -96,6 +96,7 @@ export class RarityController {
     @ApiOkResponse({ type: Rarity, description: 'Created Rarity' })
     @ApiBearerAuth()
     @ApiUnauthorizedResponse({ description: 'Invalid credentials provided' })
+    @UseInterceptors(ClassSerializerInterceptor)
     @UseGuards(JwtGuard, IsAdminGuard)
     @Post('/')
     public async create(@Body() rarity: Rarity): Promise<Rarity> {
@@ -106,19 +107,20 @@ export class RarityController {
      * Updates the rarity based on the provided ID and update data.
      *
      * @param {number} id - The ID of the rarity to be updated.
-     * @param {Rarity} brand - The data to update the rarity with.
+     * @param {PatchRarityDto} rarityDto - The data to update the rarity with.
      * @return {Promise<Rarity>} The updated rarity object.
      */
     @ApiBody({ type: PatchRarityDto, description: 'Rarity Fields to be updated' })
     @ApiOperation({ summary: 'Update Rarity' })
     @ApiParam({ name: 'id', description: 'Id of the Rarity to be updated' })
-    @ApiOkResponse({ type: SettingWorld, description: 'Updated Rarity' })
+    @ApiOkResponse({ type: Rarity, description: 'Updated Rarity' })
     @ApiBearerAuth()
     @ApiUnauthorizedResponse({ description: 'Invalid credentials provided' })
+    @UseInterceptors(ClassSerializerInterceptor)
     @UseGuards(JwtGuard, IsAdminGuard)
     @Patch('/:id')
-    public async update(@Param('id') id: number, @Body() brand: Rarity) : Promise<Rarity> {
-        return await this.rarityService.update(id, brand);
+    public async update(@Param('id') id: number, @Body() rarityDto: PatchRarityDto) : Promise<Rarity> {
+        return await this.rarityService.update(id, rarityDto);
     }
 
     /**

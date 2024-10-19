@@ -39,7 +39,7 @@ export class UpdateCharacterTemplateDto {
     @IsString()
     @IsNotEmpty()
     @IsOptional()
-    public desciption?: string;
+    public description?: string;
 
     /**
      * A string containing a quotation.
