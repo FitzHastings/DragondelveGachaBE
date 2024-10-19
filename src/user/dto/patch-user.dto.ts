@@ -13,7 +13,7 @@
    limitations under the License.
 */
 
-import { IsEnum, IsInt, IsOptional, IsPositive, IsString } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 import { Gender } from '../entities/gender.enum';
@@ -32,6 +32,7 @@ export class PatchUserDto {
      */
     @ApiPropertyOptional({ description: 'Username', type: String, example: 'TestUser' })
     @IsString()
+    @IsNotEmpty()
     @IsOptional()
     public username?: string;
 

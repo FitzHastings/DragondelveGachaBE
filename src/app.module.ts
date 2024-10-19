@@ -28,6 +28,7 @@ import { UserModule } from './user/user.module';
 import { FileModule } from './file/file.module';
 import { WorldModule } from './world/world.module';
 import { RarityModule } from './rarity/rarity.module';
+import { TemplateModule } from './template/template.module';
 
 @Module({
     imports: [
@@ -55,7 +56,8 @@ import { RarityModule } from './rarity/rarity.module';
         FileModule,
         UserModule,
         WorldModule,
-        RarityModule
+        RarityModule,
+        TemplateModule
     ],
     controllers: [AppController],
     providers: [AppService]
