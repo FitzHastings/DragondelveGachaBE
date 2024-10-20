@@ -13,12 +13,13 @@
    limitations under the License.
 */
 
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { GeneralEntity } from '../../common/entities/general.entity';
 import { ExternalFile } from '../../file/entities/external-file.entity';
+import { Character } from '../../character/entities/character.entity';
 
 import { Gender } from './gender.enum';
 
@@ -69,6 +70,22 @@ export class User extends GeneralEntity {
     public gender: string;
 
     /**
+     * Represents the amount of energy currency the user has.
+     */
+    @IsInt()
+    @IsOptional()
+    @Column({ default: '0' })
+    public energy: number;
+
+    /**
+     * Represents the amount of dust currency the user has.
+     */
+    @IsInt()
+    @IsOptional()
+    @Column({ default: '0' })
+    public dust: number;
+
+    /**
      * Represents the role of a user within a system.
      * The role is typically used to control access permissions and determine actions that can be performed by the user.
      * Common values might include 'admin', 'editor', 'viewer', etc.
@@ -109,18 +126,9 @@ export class User extends GeneralEntity {
     public imageId: number;
 
     /**
-     * Represents the amount of energy currency the user has.
+     * An array containing instances of characters owned by this player
+     * @type {Character[]}
      */
-    @IsInt()
-    @IsOptional()
-    @Column({ default: '0' })
-    public energy: number;
-
-    /**
-     * Represents the amount of dust currency the user has.
-     */
-    @IsInt()
-    @IsOptional()
-    @Column({ default: '0' })
-    public dust: number;
+    @OneToMany(() => Character, (character) => character.owner)
+    public characters: Character[];
 }

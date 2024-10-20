@@ -13,7 +13,7 @@
    limitations under the License.
 */
 
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -21,6 +21,7 @@ import { GeneralEntity } from '../../common/entities/general.entity';
 import { Rarity } from '../../rarity/entities/rarity.entity';
 import { ExternalFile } from '../../file/entities/external-file.entity';
 import { SettingWorld } from '../../world/entities/setting-world.entity';
+import { Character } from '../../character/entities/character.entity';
 
 /**
  * Represents a template for a character entity.
@@ -156,4 +157,11 @@ export class CharacterTemplate extends GeneralEntity {
     @IsOptional()
     @Column({ nullable: true, name: 'small_image_id' })
     public smallImageId: number;
+
+    /**
+     * An array containing instances of characters rolled from this Template
+     * @type {Character[]}
+     */
+    @OneToMany(() => Character, (character) => character.template)
+    public characters: Character[];
 }
