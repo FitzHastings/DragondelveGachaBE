@@ -55,7 +55,7 @@ export class AuthService {
      * @returns {Promise<AccessTokenDto>} Returns a promise that resolves to an AccessTokenDto object containing the access token.
      */
     public async login(user: User, password: string): Promise<AccessTokenDto> {
-        if (!await this.validateUser(user, password)) 
+        if (!await this.validateUser(user, password))
             throw new UnauthorizedException('Email or password is incorrect');
 
         const payload: SessionDto = { username: user.username, userId: user.id, role: user.role };
