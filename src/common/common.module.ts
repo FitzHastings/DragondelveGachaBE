@@ -22,4 +22,5 @@ import { TimestampedEntity } from './entities/timestamped.entity';
 @Module({
     imports: [TypeOrmModule.forFeature([GeneralEntity, TimestampedEntity])]
 })
-export class CommonModule {}
+export class CommonModule {
+}

@@ -117,7 +117,7 @@ export class RarityController {
     @ApiUnauthorizedResponse({ description: 'Invalid credentials provided' })
     @UseGuards(JwtGuard, IsAdminGuard)
     @Patch('/:id')
-    public async update(@Param('id') id: number, @Body() brand: Rarity) : Promise<Rarity> {
+    public async update(@Param('id') id: number, @Body() brand: Rarity): Promise<Rarity> {
         return await this.rarityService.update(id, brand);
     }
 

@@ -123,7 +123,7 @@ export class UserController {
     @ApiUnauthorizedResponse({ description: 'Invalid credentials provided' })
     @UseGuards(JwtGuard, IsAdminGuard)
     @Patch('/:id')
-    public async update(@Param('id') id: number, @Body() user: PatchUserDto) : Promise<User> {
+    public async update(@Param('id') id: number, @Body() user: PatchUserDto): Promise<User> {
         return await this.userService.patchUser(id, user);
     }
 

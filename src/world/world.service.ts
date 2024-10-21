@@ -50,7 +50,7 @@ export class WorldService {
      * @return {Promise<SettingWorld[]>} A promise that resolves to an array of SettingWorld entities with their logo relations.
      */
     public async findAll(page: number, limit: number): Promise<PagedEntities<SettingWorld>> {
-        const [ entities, total ] = await this.settingRepository.findAndCount({
+        const [entities, total] = await this.settingRepository.findAndCount({
             relations: ['logo'],
             ...generatePagingOptions(page, limit)
         });

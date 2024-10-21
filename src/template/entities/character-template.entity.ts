@@ -93,6 +93,6 @@ export class CharacterTemplate extends GeneralEntity {
     @ApiProperty({ description: 'Rarity id of this template', type: Number, example: 1 })
     @IsInt()
     @IsPositive()
-    @Column({ nullable: true, name:'rarity_id' })
+    @Column({ nullable: true, name: 'rarity_id' })
     public rarityId: number;
 }

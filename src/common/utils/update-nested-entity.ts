@@ -48,7 +48,7 @@ export async function updateNestedEntities(
         await repo.save(updatedNestlings);
 
     // Removing Candidates that were not sent for update
-    if (pendingCandidates.size > 0) 
+    if (pendingCandidates.size > 0)
         await repo.softDelete([...pendingCandidates.keys()]);
 
     // Creating new Entities

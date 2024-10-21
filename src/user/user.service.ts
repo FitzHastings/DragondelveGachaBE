@@ -112,7 +112,7 @@ export class UserService {
      * @return {Promise<User[]>} A promise that resolves to an array of User objects representing all users found.
      */
     public async findAll(page: number, limit: number): Promise<PagedEntities<User>> {
-        const [ entities, total ] = await this.usersRepository.findAndCount({
+        const [entities, total] = await this.usersRepository.findAndCount({
             relations: ['image'],
             ...generatePagingOptions(page, limit)
         });

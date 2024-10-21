@@ -31,4 +31,5 @@ import { SettingWorld } from './entities/setting-world.entity';
     controllers: [WorldController],
     providers: [WorldService]
 })
-export class WorldModule {}
+export class WorldModule {
+}

@@ -25,4 +25,5 @@ import { Rarity } from './entities/rarity.entity';
     providers: [RarityService],
     imports: [TypeOrmModule.forFeature([Rarity])]
 })
-export class RarityModule {}
+export class RarityModule {
+}
