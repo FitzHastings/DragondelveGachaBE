@@ -14,17 +14,18 @@
 */
 
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { TemplateController } from './template.controller';
-import { TemplateService } from './template.service';
-import { CharacterTemplate } from './entities/character-template.entity';
+import { RarityModule } from '../rarity/rarity.module';
+import { CharacterModule } from '../character/character.module';
+import { TemplateModule } from '../template/template.module';
+
+import { RollController } from './roll.controller';
+import { RollService } from './roll.service';
 
 @Module({
-    controllers: [TemplateController],
-    providers: [TemplateService],
-    imports: [TypeOrmModule.forFeature([CharacterTemplate])],
-    exports: [TypeOrmModule]
+    controllers: [RollController],
+    providers: [RollService],
+    imports: [RarityModule, CharacterModule, TemplateModule]
 })
-export class TemplateModule {
+export class RollModule {
 }

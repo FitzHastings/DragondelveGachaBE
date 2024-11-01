@@ -13,18 +13,12 @@
    limitations under the License.
 */
 
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Controller } from '@nestjs/common';
 
-import { TemplateController } from './template.controller';
-import { TemplateService } from './template.service';
-import { CharacterTemplate } from './entities/character-template.entity';
+import { RollService } from './roll.service';
 
-@Module({
-    controllers: [TemplateController],
-    providers: [TemplateService],
-    imports: [TypeOrmModule.forFeature([CharacterTemplate])],
-    exports: [TypeOrmModule]
-})
-export class TemplateModule {
+@Controller('roll')
+export class RollController {
+    public constructor(private readonly rollService: RollService) {
+    }
 }

@@ -23,6 +23,7 @@ import { Character } from './entities/character.entity';
 @Module({
     controllers: [CharacterController],
     providers: [CharacterService],
-    imports: [TypeOrmModule.forFeature([Character])]
+    imports: [TypeOrmModule.forFeature([Character])],
+    exports: [TypeOrmModule]
 })
 export class CharacterModule {}

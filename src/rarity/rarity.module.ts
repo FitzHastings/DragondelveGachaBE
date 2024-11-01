@@ -23,6 +23,7 @@ import { Rarity } from './entities/rarity.entity';
 @Module({
     controllers: [RarityController],
     providers: [RarityService],
-    imports: [TypeOrmModule.forFeature([Rarity])]
+    imports: [TypeOrmModule.forFeature([Rarity])],
+    exports: [TypeOrmModule]
 })
 export class RarityModule {}
