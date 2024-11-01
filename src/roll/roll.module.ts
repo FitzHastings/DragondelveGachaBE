@@ -18,14 +18,25 @@ import { Module } from '@nestjs/common';
 import { RarityModule } from '../rarity/rarity.module';
 import { CharacterModule } from '../character/character.module';
 import { TemplateModule } from '../template/template.module';
+import { UserModule } from '../user/user.module';
 
 import { RollController } from './roll.controller';
 import { RollService } from './roll.service';
 
+/**
+ * The RollModule class is a module that organizes the roll-related functionality
+ * within the application. It integrates various services, controllers, and other modules
+ * to handle operations related to rolling for characters in the Gacha.
+ */
 @Module({
     controllers: [RollController],
     providers: [RollService],
-    imports: [RarityModule, CharacterModule, TemplateModule]
+    imports: [
+        RarityModule,
+        CharacterModule,
+        TemplateModule,
+        UserModule
+    ]
 })
 export class RollModule {
 }
