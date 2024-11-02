@@ -30,6 +30,7 @@ import { WorldModule } from './world/world.module';
 import { RarityModule } from './rarity/rarity.module';
 import { TemplateModule } from './template/template.module';
 import { CharacterModule } from './character/character.module';
+import { RollModule } from './roll/roll.module';
 
 @Module({
     imports: [
@@ -59,7 +60,8 @@ import { CharacterModule } from './character/character.module';
         WorldModule,
         RarityModule,
         TemplateModule,
-        CharacterModule
+        CharacterModule,
+        RollModule
     ],
     controllers: [AppController],
     providers: [AppService]
