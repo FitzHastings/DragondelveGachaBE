@@ -87,7 +87,7 @@ export class RarityService {
         const rarity = await this.rarityRepository.findOne({ where: { id } });
         if (!rarity) throw new NotFoundException(`Rarity #${id} does not exist`);
 
-        const patchedRarity = { ...rarity, patchRarity };
+        const patchedRarity = { ...rarity, ...patchRarity };
         return await this.rarityRepository.save(patchedRarity);
     }
 
