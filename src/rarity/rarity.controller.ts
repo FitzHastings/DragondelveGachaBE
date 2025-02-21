@@ -47,7 +47,7 @@ export class RarityController {
     @ApiQuery({ name: 'limit', required: false, description: 'Optional page size requested' })
     @ApiBearerAuth()
     @ApiUnauthorizedResponse({ description: 'Invalid credentials provided' })
-    @UseGuards(JwtGuard, IsAdminGuard)
+    @UseGuards(JwtGuard)
     @Get('/')
     public async findAll(@Query('page') page?: number, @Query('limit') limit?: number): Promise<PagedEntities<Rarity>> {
         return await this.rarityService.findAll(page, limit);
