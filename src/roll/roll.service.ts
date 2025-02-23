@@ -67,7 +67,12 @@ export class RollService {
             ownerId: user.id
         });
 
-        return await this.characterRepository.save(character);
+        const rolled = await this.characterRepository.save(character);
+
+        return await this.characterRepository.findOne({
+            where: { id: rolled.id },
+            relations: ['template', 'template.rarity', 'template.setting', 'template.fullImage', 'template.smallImage']
+        });
     }
 
     /**
