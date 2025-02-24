@@ -56,6 +56,7 @@ export class RollService {
         const user = await this.userRepository.findOne({ where: { id: identity.id } });
         if (!user) throw new BadRequestException('Your Identity Token Is Invalid');
         user.energy = user.energy - 1;
+        if (user.energy <= 0) throw new BadRequestException('You Do Not Have Enough Energy To Roll');
         await this.userRepository.save(user);
 
         const rarity = await this.getRandomRarity();
