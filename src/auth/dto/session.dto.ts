@@ -35,7 +35,7 @@ export class SessionDto {
         type: Number,
         example: 2
     })
-    public readonly userId: number;
+    public readonly id: number;
 
     /**
      * Represents an email address.

@@ -58,7 +58,7 @@ export class AuthService {
         if (!await this.validateUser(user, password)) 
             throw new UnauthorizedException('Email or password is incorrect');
 
-        const payload: SessionDto = { username: user.username, userId: user.id, role: user.role };
+        const payload: SessionDto = { username: user.username, id: user.id, role: user.role };
 
         return {
             access_token: this.jwtService.sign(payload)

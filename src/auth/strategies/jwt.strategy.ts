@@ -50,6 +50,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
      * @return {Promise<SessionDto>} - The validated SessionDto object.
      */
     public async validate(payload: JwtPayload): Promise<SessionDto> {
-        return { userId: Number.parseInt(payload.userId), username: payload.username, role: payload.role };
+        return { id: Number.parseInt(payload.id), username: payload.username, role: payload.role };
     }
 }
