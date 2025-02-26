@@ -41,11 +41,12 @@ export class CharacterService {
      * Finds a single character record by its ID, including related entities.
      *
      * @param {number} id - The ID of the character to find.
+     * @param ownerId
      * @return {Promise<Character>} - A promise that resolves to the found character with specified relations.
      */
-    public async findOne(id: number): Promise<Character> {
+    public async findOne(id: number, ownerId: number): Promise<Character> {
         return await this.characterRepository.findOne({
-            where: { id },
+            where: { id, ownerId },
             relations: ['template', 'template.rarity', 'template.setting', 'template.fullImage', 'template.smallImage']
         });
     }

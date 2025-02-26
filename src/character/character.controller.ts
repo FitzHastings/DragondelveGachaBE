@@ -50,9 +50,9 @@ export class CharacterController {
     @ApiOkResponse({ type: Character, description: 'Character with all details' })
     @ApiUnauthorizedResponse({ description: 'Invalid credentials provided' })
     @ApiBearerAuth()
-    @UseGuards(JwtGuard, IsAdminGuard)
+    @UseGuards(JwtGuard)
     @Get('/:id')
-    public async findOne(@Param('id') id: number): Promise<Character> {
-        return await this.characterService.findOne(id);
+    public async findOne(@Param('id') id: number, @Identity() identity): Promise<Character> {
+        return await this.characterService.findOne(id, identity.id);
     }
 }
