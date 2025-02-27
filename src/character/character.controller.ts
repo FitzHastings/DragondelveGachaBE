@@ -1,4 +1,4 @@
-/* Copyright 2024 Prokhor Kalinin
+/* Copyright 2024-2025 Prokhor Kalinin
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { JwtGuard } from '../auth/guards/jwt.guard';
-import { IsAdminGuard } from '../auth/guards/is-admin';
 import { Identity } from '../auth/decorators/identity.decorator';
 
 import { CharacterService } from './character.service';

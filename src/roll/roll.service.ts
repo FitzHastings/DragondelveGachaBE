@@ -1,4 +1,4 @@
-/* Copyright 2024 Prokhor Kalinin
+/* Copyright 2024-2025 Prokhor Kalinin
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ export class RollService {
         const user = await this.userRepository.findOne({ where: { id: identity.id } });
         if (!user) throw new BadRequestException('Your Identity Token Is Invalid');
         user.energy = user.energy - 1;
-        if (user.energy <= 0) throw new BadRequestException('You Do Not Have Enough Energy To Roll');
+        if (user.energy < 0) throw new BadRequestException('You Do Not Have Enough Energy To Roll');
         await this.userRepository.save(user);
 
         const rarity = await this.getRandomRarity();
