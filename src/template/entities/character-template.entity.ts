@@ -138,27 +138,6 @@ export class CharacterTemplate extends GeneralEntity {
     public fullImageId: number;
 
     /**
-     * Represents a small image file used within the application.
-     * This could be an avatar, thumbnail, or any other small-sized image resource.
-     *
-     * @type {ExternalFile}
-     */
-    @ManyToOne(() => ExternalFile, (externalFile) => externalFile.templatesSmall)
-    @JoinColumn({ name: 'small_image_id' })
-    public smallImage: ExternalFile;
-
-    /**
-     * Represents the unique identifier for a full image.
-     * @type {number}
-     */
-    @ApiPropertyOptional({ description: 'id of small image external file', type: Number, example: 11 })
-    @IsInt()
-    @IsPositive()
-    @IsOptional()
-    @Column({ nullable: true, name: 'small_image_id' })
-    public smallImageId: number;
-
-    /**
      * An array containing instances of characters rolled from this Template
      * @type {Character[]}
      */

@@ -14,8 +14,9 @@
 */
 
 import { extname } from 'path';
+import * as path from 'node:path';
 
-import { Controller, Post, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Controller, Post, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as uuid from 'uuid';
@@ -69,6 +70,32 @@ export class FileController {
     public async uploadFile(@UploadedFiles() files: Array<ExternalFile>): Promise<ExternalFile> {
         const file = files[0];
         return await this.fileService.reifyFile(file);
+    }
+
+    @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
+    @ApiOkResponse({ type: ExternalFile, description: 'Reified File Handler' })
+    @ApiBearerAuth()
+    @UseGuards(JwtGuard, IsAdminGuard)
+    @ApiOperation({ summary: 'Upload a character file' })
+    @UseInterceptors(
+        FilesInterceptor('file', 10, {
+            storage: diskStorage({
+                destination: './public',
+                filename: (_req, file, cb) => {
+                    const randomName = uuid.v4();
+                    return cb(null, `${randomName}${extname(file.originalname)}`);
+                }
+            })
+        })
+    )
+    @Post('upload/character')
+    public async uploadCharacter(@UploadedFiles() files: Array<Express.Multer.File>): Promise<ExternalFile> {
+        if (!files || files.length === 0) throw new BadRequestException('No files uploaded');
+
+        const file = files[0];
+        const fullPath = path.resolve('./public', file.filename);
+
+        return await this.fileService.processAndReifyFile(file, fullPath);
     }
 }
 

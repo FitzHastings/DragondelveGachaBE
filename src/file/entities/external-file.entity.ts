@@ -57,6 +57,14 @@ export class ExternalFile extends GeneralEntity {
     @Column()
     public path: string;
 
+    @ApiProperty({ type: String, description: 'path to the file (Optimized) (Read Only)', example: '/public/static/banner.jpg' })
+    @Column({ name: 'optimized_path', nullable: true })
+    public optimizedPath: string;
+
+    @ApiProperty({ type: String, description: 'path to the file thumbnail (Read Only)', example: '/public/static/banner.jpg' })
+    @Column({ name: 'thumbnail_path', nullable: true })
+    public thumbnailPath: string;
+
     /**
      * Represents the size of a variable.
      *
@@ -103,10 +111,4 @@ export class ExternalFile extends GeneralEntity {
      */
     @OneToMany(() => CharacterTemplate, (template) => template.fullImage)
     public templatesFull: CharacterTemplate;
-
-    /**
-     * Represents a collection of small character templates.
-     */
-    @OneToMany(() => CharacterTemplate, (template) => template.smallImage)
-    public templatesSmall: CharacterTemplate;
 }
