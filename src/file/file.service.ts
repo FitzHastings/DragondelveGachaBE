@@ -54,7 +54,6 @@ export class FileService {
      * @param originalPath Path to the uploaded file on disk.
      */
     public async processAndReifyFile(file: Express.Multer.File, originalPath: string): Promise<ExternalFile> {
-        console.log(file);
         const baseName = path.basename(originalPath, path.extname(originalPath)); // Filename without extension
         const uploadDir = path.dirname(originalPath);
 
@@ -75,8 +74,8 @@ export class FileService {
             .resize(width, height)
             .toFile(resizedPath);
 
-        savedFile.thumbnailPath = `${baseName}_600w.jpg`;
-        savedFile.optimizedPath = resizedPath;
+        savedFile.thumbnailPath = `public/${baseName}_600w.jpg`;
+        savedFile.optimizedPath = `public/${baseName}.jpg`;
         return await this.fileRepository.save(savedFile);
     }
 }

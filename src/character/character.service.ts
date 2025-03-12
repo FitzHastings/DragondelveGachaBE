@@ -33,7 +33,7 @@ export class CharacterService {
     public async findOwned(ownerId: number): Promise<Character[]> {
         return await this.characterRepository.find({
             where: { owner: { id: ownerId } },
-            relations: ['template', 'template.rarity', 'template.setting', 'template.fullImage', 'template.smallImage']
+            relations: ['template', 'template.rarity', 'template.setting', 'template.fullImage']
         });
     }
 
@@ -47,7 +47,7 @@ export class CharacterService {
     public async findOne(id: number, ownerId: number): Promise<Character> {
         return await this.characterRepository.findOne({
             where: { id, ownerId },
-            relations: ['template', 'template.rarity', 'template.setting', 'template.fullImage', 'template.smallImage']
+            relations: ['template', 'template.rarity', 'template.setting', 'template.fullImage']
         });
     }
 }

@@ -41,7 +41,7 @@ export class TemplateService {
      */
     public async findAll(page?: number, limit?: number): Promise<PagedEntities<CharacterTemplate>> {
         const [ entities, total ] = await this.templateRepository.findAndCount({
-            relations: ['rarity', 'setting', 'smallImage'],
+            relations: ['rarity', 'setting', 'fullImage'],
             ...generatePagingOptions(page, limit)
         });
         return { entities, total };
@@ -65,7 +65,7 @@ export class TemplateService {
     public async findOne(id: number): Promise<CharacterTemplate> {
         return await this.templateRepository.findOne({
             where: { id },
-            relations: ['rarity', 'setting', 'fullImage', 'smallImage']
+            relations: ['rarity', 'setting', 'fullImage']
         });
     }
 
