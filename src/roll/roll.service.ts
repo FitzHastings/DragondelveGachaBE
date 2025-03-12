@@ -72,7 +72,7 @@ export class RollService {
 
         return await this.characterRepository.findOne({
             where: { id: rolled.id },
-            relations: ['template', 'template.rarity', 'template.setting', 'template.fullImage', 'template.smallImage']
+            relations: ['template', 'template.rarity', 'template.setting', 'template.fullImage']
         });
     }
 

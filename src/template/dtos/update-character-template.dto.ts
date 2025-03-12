@@ -93,13 +93,4 @@ export class UpdateCharacterTemplateDto {
     @IsPositive()
     @IsOptional()
     public fullImageId: number;
-
-    /**
-     * Represents the unique identifier for a full image.
-     * @type {number}
-     */
-    @IsInt()
-    @IsPositive()
-    @IsOptional()
-    public smallImageId: number;
 }
